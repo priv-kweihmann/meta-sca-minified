@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/onsi/ginkgo/@v/v1.16.2.zip;srcoutput=github.com/onsi/ginkgo;srcinput=github.com/onsi/ginkgo@v1.16.2;downloadfilename=github-com-onsi-ginkgo-1.16.2.zip;name=github-com-onsi-ginkgo"
-SRC_URI[github-com-onsi-ginkgo.sha256sum] = "500da6849375bff526de61366d6dfcdce48b0721ad31f9a4b31e1c03108c3d92"
+SRC_URI += "https://proxy.golang.org/github.com/onsi/ginkgo/@v/v1.16.4.zip;srcoutput=github.com/onsi/ginkgo;srcinput=github.com/onsi/ginkgo@v1.16.4;downloadfilename=github-com-onsi-ginkgo-1.16.4.zip;name=github-com-onsi-ginkgo"
+SRC_URI[github-com-onsi-ginkgo.sha256sum] = "c45bed4acea22dd9987278b30be4ab508cf3a0b87fdfa26d3b7ca994a13545fe"
 
 GOSRC_LICENSE += "\
     MIT \
