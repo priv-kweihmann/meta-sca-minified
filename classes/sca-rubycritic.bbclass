@@ -19,10 +19,10 @@ inherit sca-tracefiles
 def do_sca_conv_rubycritic(d):
     import os
     import json
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
-    
+
     _findings = []
     _suppress = sca_suppress_init(d, "SCA_RUBYCRITIC_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/rubycritic-${SCA_MODE}-suppress"))
@@ -60,15 +60,32 @@ def do_sca_conv_rubycritic(d):
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
+def exec_wrap_combine_json_rubycritic(a, b, **kwargs):
+    import json
+    try:
+        with open(kwargs["sourcefile"]) as i:
+            b = json.load(i)
+    except:
+        b = {"analysed_modules": []}
+
+    try:
+        a = json.loads(a)
+        for item in b["analysed_modules"]:
+            if not item in a["analysed_modules"]:
+                a["analysed_modules"][item] = {"smells": []}
+            a["analysed_modules"][item]["smells"] += b["analysed_modules"][item]["smells"]
+    except:
+        a = b
+    return json.dumps(a)
+
 python do_sca_rubycritic() {
     import os
     import json
     import shutil
     import subprocess
 
-    cmd_output = ""
-
     ## Run
+    os.environ["HOME"] = d.getVar("T")
     os.environ["RUBYLIB"] = os.path.join(d.getVar("STAGING_LIBDIR_NATIVE"), "ruby/")
     os.environ["GEM_DIR"] = os.path.join(d.getVar("STAGING_LIBDIR_NATIVE"), "ruby/gems/")
     os.environ["GEM_HOME"] = os.path.join(d.getVar("STAGING_LIBDIR_NATIVE"), "ruby/gems/")
@@ -77,21 +94,15 @@ python do_sca_rubycritic() {
     _args = ["rubycritic"]
     _args += ["--format=json"]
     _args += ["--path={}".format(d.expand("${T}/rubycritic"))]
-    
+
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), ".*ruby", d.getVar("SCA_RUBYCRITIC_FILE_FILTER"), \
                                                 sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
-    
-    if any(_files):    
-        try:
-            subprocess.check_call(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            pass
 
-    if os.path.exists(d.expand("${T}/rubycritic/report.json")):
-        try:
-            shutil.copy(d.expand("${T}/rubycritic/report.json"), sca_raw_result_file(d, "rubycritic"))
-        except:
-            pass
+    cmd_output = exec_wrap_check_output(_args, _files, combine=exec_wrap_combine_json_rubycritic, default_val={"analysed_modules": []},
+                                        sourcefile=d.expand("${T}/rubycritic/report.json"))
+
+    with open(sca_raw_result_file(d, "rubycritic"), "w") as o:
+        o.write(cmd_output)
 }
 
 python do_sca_rubycritic_report() {
@@ -106,17 +117,9 @@ python do_sca_rubycritic_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/rubycritic-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_rubycritic"
-
-python do_sca_deploy_rubycritic() {
-    sca_conv_deploy(d, "rubycritic")
-}
-
 do_sca_rubycritic[doc] = "Lint ruby scripts with rubycritic"
 do_sca_rubycritic_report[doc] = "Report findings of do_sca_rubycritic"
-do_sca_deploy_rubycritic[doc] = "Deploy results of do_sca_rubycritic"
 addtask do_sca_rubycritic after do_configure before do_sca_tracefiles
-addtask do_sca_rubycritic_report after do_sca_tracefiles
-addtask do_sca_deploy_rubycritic after do_sca_rubycritic_report before do_package
+addtask do_sca_rubycritic_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "rubycritic-native sca-recipe-rubycritic-rules-native"

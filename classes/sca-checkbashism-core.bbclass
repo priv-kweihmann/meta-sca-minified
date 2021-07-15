@@ -19,12 +19,12 @@ def do_sca_conv_checkbashism(d):
     import os
     import re
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
     pattern = r"^possible\sbashism\sin\s(?P<file>.*)\sline\s(?P<line>\d+)\s\((?P<id>.*)\)"
-    
+
     __suppress = sca_suppress_init(d, "SCA_CHECKBASHISM_EXTRA_SUPPRESS",
                                    d.expand("${STAGING_DATADIR_NATIVE}/checkbashism-${SCA_MODE}-suppress"))
     _findings = []
@@ -50,7 +50,7 @@ def do_sca_conv_checkbashism(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -62,16 +62,11 @@ python do_sca_checkbashism_core() {
     _args = ["checkbashisms.pl"]
     _args += ["-n", "-p"]
 
-    ## Run
-    cmd_output = ""
-    
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), ".*/(ba|k)*sh", ".sh",
-                                                    sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+                                                sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
+
+    ## Run
+    cmd_output = exec_wrap_check_output(_args, _files)
     with open(sca_raw_result_file(d, "checkbashism"), "w") as o:
         o.write(cmd_output)
 }

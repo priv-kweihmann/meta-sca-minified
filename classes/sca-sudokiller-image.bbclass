@@ -21,14 +21,14 @@ def do_sca_conv_sudokiller(d):
     import os
     import re
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
     pattern = r"^\[\-]\s+(?P<msg>.*)(\:+|\s+)"
     cve_pattern = r"^\[\+\]\s+Please\s+find the following exploit for (?P<msg>[A-Z\-0-9]+) in the exploits' directory"
 
-    _suppress = sca_suppress_init(d, "SCA_SUDOKILLER_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_SUDOKILLER_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/sudokiller-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -53,7 +53,7 @@ def do_sca_conv_sudokiller(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
             for m in re.finditer(cve_pattern, _content, re.MULTILINE):
                 try:
                     _msg = "sudo is vulnerable to {}".format(m.group("msg"))
@@ -72,7 +72,7 @@ def do_sca_conv_sudokiller(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -101,15 +101,7 @@ fakeroot python do_sca_sudokiller() {
                        d.expand("${STAGING_DATADIR_NATIVE}/sudokiller-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_sudokiller_image"
-
-python do_sca_deploy_sudokiller_image() {
-    sca_conv_deploy(d, "sudokiller")
-}
-
 do_sca_sudokiller[doc] = "Find exploitable CVEs of sudo in image"
-do_sca_deploy_sudokiller_image[doc] = "Deploy results of do_sca_sudokiller"
-addtask do_sca_sudokiller before do_image_complete after do_image
-addtask do_sca_deploy_sudokiller_image before do_image_complete after do_sca_sudokiller
+addtask do_sca_sudokiller before do_sca_deploy after do_image
 
-# FIXME: DEPENDS += "sca-image-sudokiller-rules-native"
+DEPENDS += "sca-image-sudokiller-rules-native"

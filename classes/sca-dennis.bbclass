@@ -19,7 +19,7 @@ inherit python3native
 def do_sca_conv_dennis(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -56,7 +56,7 @@ def do_sca_conv_dennis(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -71,6 +71,7 @@ python do_sca_dennis() {
 
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), ".po .pot", \
         sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
+
     for f in _files:
         try:
             _targs = _args + [f]
@@ -83,7 +84,7 @@ python do_sca_dennis() {
             prefix = "{}: ".format(f)
             cmd_output = prefix + prefix.join(cmd_output.splitlines(True))
         allrun_output += cmd_output
-    
+
     with open(sca_raw_result_file(d, "dennis"), "w") as o:
         o.write(allrun_output)
 
@@ -97,15 +98,7 @@ python do_sca_dennis() {
                        d.expand("${STAGING_DATADIR_NATIVE}/dennis-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_dennis"
-
-python do_sca_deploy_dennis() {
-    sca_conv_deploy(d, "dennis")
-}
-
 do_sca_dennis[doc] = "Lint i18n files"
-do_sca_deploy_dennis[doc] = "Deploy results of do_sca_dennis"
-addtask do_sca_dennis after do_configure before do_install
-addtask do_sca_deploy_dennis after do_sca_dennis before do_package
+addtask do_sca_dennis after do_configure before do_sca_deploy
 
 DEPENDS += "python3-dennis-native sca-recipe-dennis-rules-native"

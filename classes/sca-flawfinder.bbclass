@@ -21,7 +21,7 @@ def do_sca_conv_flawfinder(d):
     import os
     import re
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -36,7 +36,7 @@ def do_sca_conv_flawfinder(d):
         "1" : "info"
     }
 
-    _suppress = sca_suppress_init(d, "SCA_FLAWFINDER_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_FLAWFINDER_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/flawfinder-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -67,24 +67,19 @@ def do_sca_conv_flawfinder(d):
 python do_sca_flawfinder() {
     import os
     import subprocess
-    
+
     _args = ["flawfinder"]
     _args += ["--dataonly"]
     _args += ["--quiet"]
     _args += ["--singleline"]
-    _files = get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_FLAWFINDER_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_FLAWFINDER_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## Run
-    cmd_output = ""
+    cmd_output = exec_wrap_check_output(_args, _files)
 
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
     with open(sca_raw_result_file(d, "flawfinder"), "w") as o:
         o.write(cmd_output)
 }
@@ -97,21 +92,13 @@ python do_sca_flawfinder_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "flawfinder", get_fatal_entries(d, "SCA_FLAWFINDER_EXTRA_FATAL", 
+    sca_task_aftermath(d, "flawfinder", get_fatal_entries(d, "SCA_FLAWFINDER_EXTRA_FATAL",
                         d.expand("${STAGING_DATADIR_NATIVE}/flawfinder-${SCA_MODE}-fatal")))
-}
-
-SCA_DEPLOY_TASK = "do_sca_deploy_flawfinder"
-
-python do_sca_deploy_flawfinder() {
-    sca_conv_deploy(d, "flawfinder")
 }
 
 do_sca_flawfinder[doc] = "Find insecure C/C++ code"
 do_sca_flawfinder_report[doc] = "Report findings of do_sca_flawfinder"
-do_sca_deploy_flawfinder[doc] = "Deploy results of do_sca_flawfinder"
 addtask do_sca_flawfinder after do_compile before do_sca_tracefiles
-addtask do_sca_flawfinder_report after do_sca_tracefiles
-addtask do_sca_deploy_flawfinder after do_sca_flawfinder_report before do_package
+addtask do_sca_flawfinder_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "python3-flawfinder-native sca-recipe-flawfinder-rules-native"

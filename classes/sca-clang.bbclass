@@ -25,7 +25,7 @@ SCA_RAW_RESULT_FILE[clang] = "txt"
 def do_sca_conv_clang(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -68,7 +68,7 @@ def do_sca_conv_clang(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -80,7 +80,7 @@ python do_sca_clang() {
 
     _add_include = d.getVar("SCA_CLANG_ADD_INCLUDES", True).split(" ")
 
-    inc_dirs = [d.getVar("SCA_SOURCES_DIR"),    
+    inc_dirs = [d.getVar("SCA_SOURCES_DIR"),
                 os.path.join(d.getVar("SCA_SOURCES_DIR"), "include"),
                 os.path.join(d.getVar("STAGING_DIR"), "include"),
                 d.getVar("STAGING_INCDIR")]
@@ -108,12 +108,8 @@ python do_sca_clang() {
     with open(os.path.join(d.getVar("B"), "compile_commands.json"), "w") as o:
         json.dump(compile_json, o)
 
-    cmd_output = ""
-    for _f in get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_CLANG_FILE_FILTER").split(" "), []):
-        try:
-            cmd_output += subprocess.check_output(_args + [_f], universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
+    _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_CLANG_FILE_FILTER").split(" "), [])
+    cmd_output = exec_wrap_check_output(_args, _files, chunk_size=1)
 
     if os.path.exists(os.path.join(d.getVar("B"), "compile_commands.json")):
         os.remove(os.path.join(d.getVar("B"), "compile_commands.json"))
@@ -134,17 +130,9 @@ python do_sca_clang_report() {
                         os.path.join(d.getVar("STAGING_DATADIR_NATIVE", True), "clang-{}-fatal".format(d.getVar("SCA_MODE")))))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_clang"
-
-python do_sca_deploy_clang() {
-    sca_conv_deploy(d, "clang")
-}
-
 do_sca_clang[doc] = "Run scan of clang-tidy on recipe"
 do_sca_clang_report[doc] = "Report findings of do_sca_clang"
-do_sca_deploy_clang[doc] = "Deploy results of do_sca_clang"
 addtask do_sca_clang after do_compile before do_sca_tracefiles
-addtask do_sca_clang_report after do_sca_tracefiles
-addtask do_sca_deploy_clang after do_sca_clang_report before do_package
+addtask do_sca_clang_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "clang-native sca-recipe-clang-rules-native clang-sca-native"

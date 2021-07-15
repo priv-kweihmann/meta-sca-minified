@@ -17,7 +17,7 @@ inherit sca-suppress
 def do_sca_conv_htmlhint(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -53,7 +53,7 @@ def do_sca_conv_htmlhint(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -65,14 +65,9 @@ python do_sca_htmlhint_core() {
 
     _args = ["htmlhint"]
     _args += ["-f", "unix"]
-    _args += [d.getVar("SCA_SOURCES_DIR") + "/"]
 
-    cmd_output = ""
-    try:
-        cmd_output = subprocess.check_output(_args, universal_newlines=True, stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as e:
-        cmd_output = e.stdout or ""
-    
+    cmd_output = exec_wrap_check_output(_args, [d.getVar("SCA_SOURCES_DIR") + "/"])
+
     with open(sca_raw_result_file(d, "htmlhint"), "w") as o:
         o.write(cmd_output)
 }

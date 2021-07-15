@@ -15,7 +15,7 @@ inherit python3native
 def do_sca_conv_flake8(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -75,8 +75,8 @@ def do_sca_conv_flake8(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
-    
+                    bb.note(str(exp))
+
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -94,12 +94,8 @@ python do_sca_flake8_core() {
                                                sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## Run
-    cmd_output = ""
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files)
+
     with open(sca_raw_result_file(d, "flake8"), "w") as o:
         o.write(cmd_output)
 }

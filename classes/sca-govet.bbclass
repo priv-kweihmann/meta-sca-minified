@@ -21,7 +21,7 @@ def do_sca_conv_govet(d):
     import os
     import re
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -30,7 +30,7 @@ def do_sca_conv_govet(d):
     pattern_warn = r"^(vet:\s+)*(?P<file>.*):(?P<line>\d+):\s*(?P<msg>.*)"
     pattern_err = r"^(vet:\s+)*(?P<file>.*):(?P<line>\d+):(?P<col>\d+):\s*(?P<msg>.*)"
 
-    _suppress = sca_suppress_init(d, "SCA_GOVET_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_GOVET_EXTRA_SUPPRESS",
                                     d.expand("${STAGING_DATADIR_NATIVE}/govet-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -55,7 +55,7 @@ def do_sca_conv_govet(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
             for m in re.finditer(pattern_err, content, re.MULTILINE):
                 try:
                     g = sca_get_model_class(d,
@@ -75,7 +75,7 @@ def do_sca_conv_govet(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -86,18 +86,14 @@ python do_sca_govet() {
     os.environ["GOCACHE"] = d.expand("${T}/.gocache")
     _args = ["go", "vet", "-v", "-all"]
 
-    cmd_output = ""
-    _files = get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_GOVET_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_GOVET_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## Run
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files)
+
     with open(sca_raw_result_file(d, "govet"), "w") as o:
         o.write(cmd_output)
 }
@@ -115,17 +111,9 @@ python do_sca_govet_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/govet-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_govet"
-
-python do_sca_deploy_govet() {
-    sca_conv_deploy(d, "govet")
-}
-
 do_sca_govet[doc] = "Lint go files with go vet"
 do_sca_govet_report[doc] = "Report findings of do_sca_govet"
-do_sca_deploy_govet[doc] = "Deploy results of do_sca_govet"
 addtask do_sca_govet after do_configure before do_sca_tracefiles
-addtask do_sca_govet_report after do_sca_tracefiles
-addtask do_sca_deploy_govet after do_sca_govet_report before do_package
+addtask do_sca_govet_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "govet-sca-native sca-recipe-govet-rules-native"

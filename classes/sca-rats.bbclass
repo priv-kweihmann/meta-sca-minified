@@ -21,7 +21,7 @@ def do_sca_conv_rats(d):
     import hashlib
     from xml.etree.ElementTree import Element, SubElement, Comment, tostring
     from xml.etree import ElementTree
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -32,7 +32,7 @@ def do_sca_conv_rats(d):
         "Default": "info"
     }
 
-    _suppress = sca_suppress_init(d, "SCA_RATS_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_RATS_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/rats-${SCA_MODE}-suppress"))
 
     _findings = []
@@ -54,7 +54,7 @@ def do_sca_conv_rats(d):
                         _id = _i.text.replace(" ", "_")
                     if not _severity in sca_allowed_warning_level(d):
                         continue
-                    # address the bug that rats sometimes doesn't report    
+                    # address the bug that rats sometimes doesn't report
                     # a proper ID for the findings
                     if not _id:
                         _id = hashlib.md5(str.encode(_msg)).hexdigest()
@@ -76,7 +76,7 @@ def do_sca_conv_rats(d):
                                 continue
                             _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
         except:
             pass
 
@@ -96,68 +96,33 @@ python do_sca_rats() {
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), ".c", _excludes)
     ## C
     if any(_files):
-        try:
-            _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-c.xml")]
-            _targs += _files
-            cmd_output = subprocess.check_output(_targs, universal_newlines=True, stderr=subprocess.STDOUT)
-        except UnicodeDecodeError:
-            cmd_output = ""
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
-        xml_output = xml_combine(d, xml_output, cmd_output)
+        _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-c.xml")]
+        xml_output = xml_combine(d, xml_output, exec_wrap_check_output(_targs, _files, combine=exec_wrap_combine_xml))
 
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), ".*perl", ".perl .pl", _excludes)
     ## Perl
     if any(_files):
-        try:
-            _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-perl.xml")]
-            _targs += _files
-            cmd_output = subprocess.check_output(_targs, universal_newlines=True, stderr=subprocess.STDOUT)
-        except UnicodeDecodeError:
-            cmd_output = ""
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
-        xml_output = xml_combine(d, xml_output, cmd_output)
+        _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-perl.xml")]
+        xml_output = xml_combine(d, xml_output, exec_wrap_check_output(_targs, _files, combine=exec_wrap_combine_xml))
 
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_PYTHON_SHEBANG"), ".py", _excludes)
     ## Python
     if any(_files):
-        try:
-            _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-python.xml")]
-            _targs += _files
-            cmd_output = subprocess.check_output(_targs, universal_newlines=True, stderr=subprocess.STDOUT)
-        except UnicodeDecodeError:
-            cmd_output = ""
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
-        xml_output = xml_combine(d, xml_output, cmd_output)
+        _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-python.xml")]
+        xml_output = xml_combine(d, xml_output, exec_wrap_check_output(_targs, _files, combine=exec_wrap_combine_xml))
 
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), ".*php", ".php", _excludes)
     ## Php
     if any(_files):
-        try:
-            _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-php.xml")]
-            _targs += _files
-            cmd_output = subprocess.check_output(_targs, universal_newlines=True, stderr=subprocess.STDOUT)
-        except UnicodeDecodeError:
-            cmd_output = ""
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
-        xml_output = xml_combine(d, xml_output, cmd_output)
+        _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-php.xml")]
+        xml_output = xml_combine(d, xml_output, exec_wrap_check_output(_targs, _files, combine=exec_wrap_combine_xml))
 
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), ".*ruby", ".ruby .rb", _excludes)
     ## Ruby
     if any(_files):
-        try:
-            _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-ruby.xml")]
-            _targs += _files
-            cmd_output = subprocess.check_output(_targs, universal_newlines=True, stderr=subprocess.STDOUT)
-        except UnicodeDecodeError:
-            cmd_output = ""
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
-        xml_output = xml_combine(d, xml_output, cmd_output)
-    
+        _targs = _args + ["-d", os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "rats-ruby.xml")]
+        xml_output = xml_combine(d, xml_output, exec_wrap_check_output(_targs, _files, combine=exec_wrap_combine_xml))
+
     with open(sca_raw_result_file(d, "rats"), "w") as o:
         o.write(xml_output)
 }
@@ -174,17 +139,9 @@ python do_sca_rats_report() {
                         d.expand("${STAGING_DATADIR_NATIVE}/rats-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_rats"
-
-python do_sca_deploy_rats() {
-    sca_conv_deploy(d, "rats")
-}
-
 do_sca_rats[doc] = "Find risky functions in multiple languages"
 do_sca_rats_report[doc] = "Report findings of do_sca_rats"
-do_sca_deploy_rats[doc] = "Deploy results of do_sca_rats"
 addtask do_sca_rats after do_configure before do_sca_tracefiles
-addtask do_sca_rats_report after do_sca_tracefiles
-addtask do_sca_deploy_rats after do_sca_rats_report before do_package
+addtask do_sca_rats_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "rats-native sca-recipe-rats-rules-native"

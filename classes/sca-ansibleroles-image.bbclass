@@ -33,7 +33,7 @@ def do_sca_conv_ansibleroles(d):
     import os
     import re
     import json
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -71,7 +71,7 @@ def do_sca_conv_ansibleroles(d):
                         if g.Severity in sca_allowed_warning_level(d):
                             _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -146,13 +146,5 @@ fakeroot python do_sca_ansibleroles() {
         sca_task_aftermath(d, "ansibleroles", get_fatal_entries(d, "SCA_ANSIBLEROLES_EXTRA_FATAL", None))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_ansibleroles_image"
-
-python do_sca_deploy_ansibleroles_image() {
-    sca_conv_deploy(d, "ansibleroles")
-}
-
 do_sca_ansibleroles[doc] = "Audit image with ansible roles"
-addtask do_sca_ansibleroles before do_image_complete after do_image
-do_sca_deploy_ansibleroles_image[doc] = "Deploy results of do_sca_ansibleroles"
-addtask do_sca_deploy_ansibleroles_image before do_image_complete after do_sca_ansibleroles
+addtask do_sca_ansibleroles before do_sca_deploy after do_image

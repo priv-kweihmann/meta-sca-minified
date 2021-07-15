@@ -4,6 +4,7 @@
 inherit sca-conv-to-export
 inherit sca-datamodel
 inherit sca-blacklist
+inherit sca-helper-exec
 
 DEPENDS += "${@oe.utils.ifelse(sca_is_module_blacklisted(d, 'foo'), '', 'python3-python-magic-native')}"
 
@@ -210,8 +211,8 @@ def get_fatal_from_result(d, fatal_ids):
             res.add(i)
     return list(res)
 
-def clean_split(d, _var):
-    return [x for x in (d.getVar(_var) or "").split(" ") if x]
+def clean_split(d, _var, ignores=["\\"]):
+    return [x for x in (d.getVar(_var) or "").split(" ") if x and x not in ignores]
 
 def get_local_includes(path):
     import glob
@@ -248,16 +249,16 @@ def sca_task_aftermath(d, tool, fatals=None):
         warn_log.append("{} error(s)".format(len(_errors)))
     if warn_log and should_emit_to_console(d):
         bb.warn("SCA has found {}".format(",".join(warn_log)))
-    
+
     if any(_fatals):
-        bb.build.exec_func(d.getVar("SCA_DEPLOY_TASK"), d)
+        bb.build.exec_func(d.getVar("do_sca_deploy"), d)
         _str_fatals = ["{} :{}:{} - {} - [{}]".format(i.GetPath(), i.Line, i.Column, i.Message, i.GetFormattedID()) for i in _fatals]
         bb.error("SCA has following fatal errors: {}".format("\n".join(_str_fatals)))
 
 
 def get_bb_exec_ext_parameter_support(d):
     ## Since commit https://github.com/openembedded/bitbake/commit/cfeffb602dd5319f071cd6bcf84139ec77f2d170
-    ## The support for pythonexception=True was removed from bb.build.exec_func    
+    ## The support for pythonexception=True was removed from bb.build.exec_func
     ## which this layer uses heavily
     ## so we need to probe here for it
     ## if we are able to pass it or not

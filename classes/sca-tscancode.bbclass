@@ -46,7 +46,7 @@ def do_sca_conv_tscancode(d):
     import os
     from xml.etree.ElementTree import Element, SubElement, Comment, tostring
     from xml.etree import ElementTree
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -58,7 +58,7 @@ def do_sca_conv_tscancode(d):
         "Information" : "info"
     }
 
-    _suppress = sca_suppress_init(d, "SCA_TSCANCODE_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_TSCANCODE_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/tscancode-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -83,12 +83,20 @@ def do_sca_conv_tscancode(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
         except:
             pass
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
+
+def exec_wrap_tool_exec_tscancode(args, files, stdout=None, stderr=None, **kwargs):
+    import subprocess
+    try:
+        x = subprocess.run(args + files, universal_newlines=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        return x.stderr
+    except subprocess.CalledProcessError as e:
+        return e.stderr or ""
 
 do_sca_tscancode[vardepsexclude] += "BB_NUMBER_THREADS"
 python do_sca_tscancode() {
@@ -96,7 +104,6 @@ python do_sca_tscancode() {
     import subprocess
     import shutil
 
-    xml_output = ""
     _args = ["tscancode"]
     _args += ["--xml"]
     _args += ["--enable=all"]
@@ -106,9 +113,9 @@ python do_sca_tscancode() {
         _args += ["-D{}{}".format(d.getVar("SCA_TSCANCODE_SYMBOL_PREFIX"), sym)]
     for x in [x for x in d.getVar("SCA_TSCANCODE_INCLUDE_PATHS") if x]:
         _args += ["-I", x]
-    _args += get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_TSCANCODE_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_TSCANCODE_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## create tmpdir
@@ -121,15 +128,14 @@ python do_sca_tscancode() {
     _curdir = os.getcwd()
     os.chdir(os.path.join(d.getVar("T"), "tscancode"))
 
-    try:
-        x = subprocess.run(_args, universal_newlines=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-        cmd_output = x.stderr
-    except subprocess.CalledProcessError as e:
-        cmd_output = e.stderr or ""
-    os.chdir(_curdir)
+    xml_output = exec_wrap_check_output(_args, _files,
+                                        combine=exec_wrap_combine_xml,
+                                        toolexec=exec_wrap_tool_exec_tscancode)
 
     with open(sca_raw_result_file(d, "tscancode"), "w") as o:
-        o.write(cmd_output)
+        o.write(xml_output)
+
+    os.chdir(_curdir)
 }
 
 python do_sca_tscancode_report() {
@@ -144,17 +150,9 @@ python do_sca_tscancode_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/tscancode-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_tscancode"
-
-python do_sca_deploy_tscancode() {
-    sca_conv_deploy(d, "tscancode")
-}
-
 do_sca_tscancode[doc] = "Lint C/C++ files with tscancode"
 do_sca_tscancode_report[doc] = "Report findings of do_sca_tscancode"
-do_sca_deploy_tscancode[doc] = "Deploy results of do_sca_tscancode"
 addtask do_sca_tscancode after do_configure before do_sca_tracefiles
-addtask do_sca_tscancode_report after do_sca_tracefiles
-addtask do_sca_deploy_tscancode after do_sca_tscancode_report before do_package
+addtask do_sca_tscancode_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "tscancode-native sca-recipe-tscancode-rules-native"

@@ -20,7 +20,7 @@ inherit python3native
 def do_sca_conv_pysymcheck(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -55,7 +55,7 @@ def do_sca_conv_pysymcheck(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -71,20 +71,15 @@ python do_sca_pysymcheck() {
     if not os.path.exists(os.path.join(d.getVar("STAGING_BINDIR_NATIVE"), "pysymbolcheck", d.getVar("SCA_PYSYMCHECK_RULE_FILE"))):
         bb.warn("Rule-File {} does not exists - Empty results will be expected".format(d.getVar("SCA_PYSYMCHECK_RULE_FILE")))
 
-    _files = get_files_by_mimetype(d, d.getVar("D"), 
+    _files = get_files_by_mimetype(d, d.getVar("D"),
                                   ["application/x-executable", 'application/x-sharedlib',
                                    "application/x-pie-executable", "application/x-pie-sharedlib"],
                                    sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
     ## Run
-    cmd_output = ""
-    for _f in _files:
-        try:
-            cmd_output += subprocess.check_output(_args + [_f], universal_newlines=True)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files, chunk_size=1)
     with open(sca_raw_result_file(d, "pysymcheck"), "w") as o:
         o.write(cmd_output)
-    
+
     ## Create data model
     d.setVar("SCA_DATAMODEL_STORAGE", "{}/pysymcheck.dm".format(d.getVar("T")))
     dm_output = do_sca_conv_pysymcheck(d)
@@ -95,15 +90,7 @@ python do_sca_pysymcheck() {
                         d.expand("${STAGING_DATADIR_NATIVE}/pysymcheck-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_pysymcheck"
-
-python do_sca_deploy_pysymcheck() {
-    sca_conv_deploy(d, "pysymcheck")
-}
-
 do_sca_pysymcheck[doc] = "Find forbidden function linkage"
-do_sca_deploy_pysymcheck[doc] = "Deploy results of do_sca_pysymcheck"
-addtask do_sca_pysymcheck after do_install
-addtask do_sca_deploy_pysymcheck after do_sca_pysymcheck before do_package
+addtask do_sca_pysymcheck after do_install before do_sca_deploy
 
 DEPENDS += "python3-pysymbolcheck-native sca-recipe-pysymcheck-rules-native"
