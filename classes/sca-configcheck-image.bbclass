@@ -28,6 +28,7 @@ inherit sca-helper
 inherit sca-license-filter
 inherit sca-crossemu
 inherit sca-suppress
+inherit sca-image-backtrack
 
 inherit sca-configcheck-mod-apache2
 inherit sca-configcheck-mod-cups
@@ -87,11 +88,11 @@ fakeroot python do_sca_configcheck() {
                 cmd_output += _cmd_output + "\n###########\n"
                 _raw_findings += sca_get_func_by_name(d, _conv_args_name)(d, _cmd_output, _suppress)
             else:
-                bb.note("configcheck -> {} no output".format(mod))
+                sca_log_note(d, "configcheck -> {} no output".format(mod))
         except NotImplementedError:
             pass
         except Exception as e:
-            bb.note(str(e))
+            sca_log_note(d, str(e))
 
     with open(sca_raw_result_file(d, "configcheck"), "w") as o:
         o.write(cmd_output)

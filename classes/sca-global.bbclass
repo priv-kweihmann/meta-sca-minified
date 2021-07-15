@@ -1,10 +1,16 @@
 ## SPDX-License-Identifier: BSD-2-Clause
 ## Copyright (c) 2019, Konrad Weihmann
 
+inherit sca-log
+
 SCA_ENABLE ?= "1"
 SCA_EXPORT_DIR ?= "${DEPLOY_DIR_IMAGE}/sca"
-SCA_EXPORT_FINDING_SRC = "1"
+SCA_EXPORT_FINDING_SRC ?= "1"
 SCA_EXPORT_FINDING_DIR ?= "${DEPLOY_DIR_IMAGE}/sca/sources/${PN}/"
+
+# local workspace dir to export findings
+SCA_FINDINGS_DIR ?= "${WORKDIR}/sca"
+
 # Add layer names, like 'core' or 'openembedded-layer' to suppress
 # SCA on all recipes of that layer
 SCA_SPARE_LAYER ?= ""
@@ -49,6 +55,9 @@ SCA_PYTHON_SHEBANG = ".*python3"
 ## Cleanup old files before exporting
 SCA_CLEAN_BEFORE_EXPORT ?= "1"
 
+## Backtrack findings in images to their original recipes
+SCA_BACKTRACK ?= "0"
+
 ## Force run of SCA
 SCA_FORCE_RUN ??= "0"
 
@@ -64,11 +73,6 @@ SCA_SCOPE_FILTER ?= "security functional compliance style"
 ## List of rules for transforming severity
 ## example: pylint.pylint.C0103=error
 SCA_SEVERITY_TRANSFORM ?= ""
-
-## NOTE: To due an issue in setuptools, it's impossible to install
-## ansiblelint at the moment.
-## An official release from the project is not yet released to pypi
-## so ansiblelint can't be installed to master or zeus branch
 
 ## List of overall available modules
 SCA_AVAILABLE_MODULES ?= "\

@@ -21,6 +21,7 @@ inherit sca-datamodel
 inherit sca-global
 inherit sca-helper
 inherit sca-suppress
+inherit sca-image-backtrack
 inherit sca-tracefiles
 
 def get_config_symbols(d, config_file=".config", strip="CONFIG_"):
@@ -81,9 +82,9 @@ def do_sca_conv_tscancode(d):
                     if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):
                         continue
                     if g.Severity in sca_allowed_warning_level(d):
-                        _findings.append(g)
+                        _findings += sca_backtrack_findings(d, g)
                 except Exception as exp:
-                    bb.note(str(exp))
+                    sca_log_note(d, str(exp))
         except:
             pass
 
@@ -128,7 +129,7 @@ python do_sca_tscancode() {
     _curdir = os.getcwd()
     os.chdir(os.path.join(d.getVar("T"), "tscancode"))
 
-    xml_output = exec_wrap_check_output(_args, _files,
+    xml_output = exec_wrap_check_output(d, _args, _files,
                                         combine=exec_wrap_combine_xml,
                                         toolexec=exec_wrap_tool_exec_tscancode)
 

@@ -12,6 +12,7 @@ inherit sca-datamodel
 inherit sca-global
 inherit sca-helper
 inherit sca-suppress
+inherit sca-image-backtrack
 
 inherit python3native
 
@@ -40,7 +41,7 @@ def convert_veryraw(d, bin, content):
                     _file = os.path.abspath(im.group("file"))
                     output += "{} - {}:{} - {}\n".format(bin, _file, im.group("line"), m.group("msg"))
             except Exception as e:
-                bb.note(str(e))
+                sca_log_note(d, str(e))
     return output
 
 def do_sca_conv_ropgadget(d):
@@ -80,9 +81,9 @@ def do_sca_conv_ropgadget(d):
                         _findings[m.group("bin")] = 0
                     _findings[m.group("bin")] += 1
                     if g.Severity in sca_allowed_warning_level(d):
-                        _findingsres.append(g)
+                        _findingsres += sca_backtrack_findings(d, g)
                 except Exception as exp:
-                    bb.note(str(exp))
+                    sca_log_note(d, str(exp))
 
     _threshold = 99999999999
     try:
@@ -105,7 +106,7 @@ def do_sca_conv_ropgadget(d):
             if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):
                 continue
             if g.Severity in sca_allowed_warning_level(d):
-                _findingsres.append(g)
+                _findingsres += sca_backtrack_findings(d, g)
 
     sca_add_model_class_list(d, _findingsres)
     return sca_save_model_to_string(d)
