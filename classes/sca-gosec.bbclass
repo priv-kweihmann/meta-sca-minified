@@ -95,11 +95,6 @@ python do_sca_gosec() {
                                     clean_split(d, "SCA_GOSEC_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
-    # FIXME
-    bb.note("Temporary diabled due to linking issues in go 1.15x")
-    _files = []
-    # FIXME
-    
     ## Run
     cmd_output = exec_wrap_check_output(d, _args, _files, combine=exec_wrap_combine_json_gosec,
                                         default_val={"Issues": []},
@@ -125,4 +120,4 @@ do_sca_gosec_report[doc] = "Report findings of do_sca_gosec"
 addtask do_sca_gosec after do_configure before do_sca_tracefiles
 addtask do_sca_gosec_report after do_sca_tracefiles before do_sca_deploy
 
-DEPENDS += "gosec-native sca-recipe-gosec-rules-native"
+DEPENDS += "gosec-sca-native sca-recipe-gosec-rules-native"
