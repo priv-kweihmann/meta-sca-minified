@@ -23,7 +23,6 @@ python sca_cvecheck_init() {
 }
 
 def sca_create_data_file(d, patched, unpatched, cve_data):
-    import re
     import os
     """
     Write CVE information in WORKDIR; and to CVE_CHECK_DIR, and
@@ -69,7 +68,7 @@ python do_cve_check() {
 
     if os.path.exists(d.getVar("CVE_CHECK_DB_FILE")):
         patched_cves = get_patches_cves(d)
-        _, patched, unpatched = check_cves(d, patched_cves)
+        patched, unpatched = check_cves(d, patched_cves)
         if patched or unpatched:
             cve_data = get_cve_info(d, patched + unpatched)
 
