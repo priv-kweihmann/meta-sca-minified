@@ -69,6 +69,12 @@
         ],
         "findings": [
             "bad-go"
+        ],
+        "no-findings": [
+            "busybox"
+        ],
+        "additional-targets": [
+            "revive-native"
         ]
     }
 }
