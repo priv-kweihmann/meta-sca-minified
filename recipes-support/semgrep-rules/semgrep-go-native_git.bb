@@ -5,7 +5,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=cceb70c3f326568ccff13faee2f67113"
 
 SRC_URI = "git://github.com/dgryski/semgrep-go.git;protocol=https"
-SRCREV = "7d35e5cda6042222c8016257ffb51874c000584a"
+SRCREV = "2a93c65eb54c03b7c3a1523ab0eaca2e7e1c31c5"
 UPSTREAM_CHECK_COMMITS = "1"
 
 S = "${WORKDIR}/git"

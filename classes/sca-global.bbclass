@@ -23,14 +23,16 @@ SCA_SPARE_DIRS ?= ""
 # lead SCA to be invoked
 SCA_SPARE_IGNORE_BBAPPEND ?= "0"
 
-## Valid values are 'checkstyle' or 'console' or 'diff' or 'codeclimate' or 'sarif' or 'plain'
+## Valid values are 'checkstyle' or 'console' or 'diff' or 'stat' or 'sarif' or 'plain'
 SCA_EXPORT_FORMAT ?= "checkstyle"
 SCA_EXPORT_FORMAT_SUFFIX_checkstyle = "xml"
 SCA_EXPORT_FORMAT_SUFFIX_console = "txt"
 SCA_EXPORT_FORMAT_SUFFIX_diff = "txt"
-SCA_EXPORT_FORMAT_SUFFIX_codeclimate = "json"
+SCA_EXPORT_FORMAT_SUFFIX_stat = "json"
 SCA_EXPORT_FORMAT_SUFFIX_sarif = "sarif"
 SCA_EXPORT_FORMAT_SUFFIX_plain = "txt"
+# here for backward compatibility
+SCA_EXPORT_FORMAT_SUFFIX_codeclimate = "json"
 
 SCA_AUTO_INH_ON_IMAGE ?= "1"
 SCA_AUTO_INH_ON_RECIPE ?= "1"
@@ -129,12 +131,11 @@ SCA_AVAILABLE_MODULES ?= "\
                           pytype \
                           rats \
                           reconbf \
-                          reek \
                           retire \
                           reuse \
                           revive \
-                          rubycritic \
                           safety \
+                          secretlint \
                           semgrep \
                           setuptoolslint \
                           shellcheck \
@@ -157,7 +158,7 @@ SCA_AVAILABLE_MODULES ?= "\
                         "
 # additional layer requirements
 SCA_AVAILABLE_MODULES[clang] = "clang-layer"
-SCA_AVAILABLE_MODULES[inspec] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[inspec] = "openembedded-layer rubygems"
 SCA_AVAILABLE_MODULES[luacheck] = "openembedded-layer"
 SCA_AVAILABLE_MODULES[phan] = "openembedded-layer"
 SCA_AVAILABLE_MODULES[phpcodefixer] = "openembedded-layer"
@@ -166,6 +167,8 @@ SCA_AVAILABLE_MODULES[phpmd] = "openembedded-layer"
 SCA_AVAILABLE_MODULES[phpsecaudit] = "openembedded-layer"
 SCA_AVAILABLE_MODULES[phpstan] = "openembedded-layer"
 SCA_AVAILABLE_MODULES[progpilot] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[reek] = "rubygems"
+SCA_AVAILABLE_MODULES[rubycritic] = "rubygems"
 
 # Modules using crossemu support, because they need some extra "love"
 _SCA_CROSSEMU_MODULES = "\
