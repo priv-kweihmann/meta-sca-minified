@@ -1,0 +1,23 @@
+{
+    "buildspeed": 10,
+    "execspeed": 10,
+    "languages": [
+        "json"
+    ],
+    "uses": [
+    ],
+    "quality": 5,
+    "scope": [
+        "functional"
+    ],
+    "score": {
+        "functional": [
+            "jsonlint.jsonlint..*"
+        ]
+    },
+    "test": {
+        "findings": [
+            "bad-json"
+        ]
+    }
+}

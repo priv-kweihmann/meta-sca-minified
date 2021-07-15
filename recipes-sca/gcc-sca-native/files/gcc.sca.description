@@ -1,0 +1,29 @@
+{
+    "buildspeed": 10,
+    "execspeed": 10,
+    "languages": [
+        "c",
+        "cpp"
+    ],
+    "uses": [
+    ],
+    "quality": 10,
+    "scope": [
+        "security",
+        "functional"
+    ],
+    "score": {
+        "functional": [
+            "gcc.gcc..*"
+        ],
+        "security": [
+            "gcc.gcc.hardening.*"
+        ]
+    },
+    "test": {
+        "findings": [
+            "busybox",
+            "simple-c"
+        ]
+    }
+}

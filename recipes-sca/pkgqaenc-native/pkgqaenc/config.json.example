@@ -1,0 +1,21 @@
+{
+    "minMask": {
+        "application/x-pie-executable": "0500"
+    },
+    "maxMask": {
+        "application/x-pie-executable": "0755"
+    },
+    "acceptableDirs": [
+        "etc",
+        "usr"
+    ],
+    "blacklistFiles": [
+        "application/x-pie-executable",
+        ".c",
+        ".h",
+        "text/x-c"
+    ],
+    "whitelistFiles": [
+        ".myext"
+    ]
+}

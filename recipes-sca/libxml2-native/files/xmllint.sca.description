@@ -1,0 +1,26 @@
+{
+    "buildspeed": 7,
+    "execspeed": 10,
+    "languages": [
+        "xml"
+    ],
+    "uses": [
+    ],
+    "quality": 7,
+    "scope": [
+        "functional"
+    ],
+    "score": {
+        "functional": [
+            "xmllint.xmllint..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["xmllint", "--version"], "returncode": 0}
+        ],
+        "findings": [
+            "bad-xml"
+        ]
+    }
+}

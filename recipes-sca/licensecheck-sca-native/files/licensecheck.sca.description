@@ -1,0 +1,28 @@
+{
+    "buildspeed": 6,
+    "execspeed": 3,
+    "languages": [
+        "package"
+    ],
+    "uses": [
+        "@go",
+        "@python"
+    ],
+    "quality": 8,
+    "scope": [
+        "compliance"
+    ],
+    "score": {
+        "compliance": [
+            "licensecheck.licensecheck..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["licensecheck", "--help"], "returncode": 0}
+        ],
+        "findings": [
+            "bad-package"
+        ]
+    }
+}

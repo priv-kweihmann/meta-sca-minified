@@ -1,0 +1,25 @@
+{
+    "buildspeed": 6,
+    "execspeed": 9,
+    "languages": [
+        "ruby"
+    ],
+    "uses": [
+        "@ruby"
+    ],
+    "online": true,
+    "quality": 7,
+    "scope": [
+        "style"
+    ],
+    "score": {
+        "style": [
+            "reek.reek..*"
+        ]
+    },
+    "test": {
+        "findings": [
+            "rubycritic-test"
+        ]
+    }
+}

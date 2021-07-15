@@ -1,0 +1,27 @@
+{
+    "buildspeed": 2,
+    "execspeed": 9,
+    "languages": [
+        "python"
+    ],
+    "uses": [
+        "@python"
+    ],
+    "quality": 8,
+    "scope": [
+        "security"
+    ],
+    "score": {
+        "security": [
+            "bandit.bandit..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["bandit", "--help"], "returncode": 0}
+        ],
+        "findings": [
+            "python3-git"
+        ]
+    }
+}

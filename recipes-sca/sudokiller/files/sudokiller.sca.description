@@ -1,0 +1,23 @@
+{
+    "buildspeed": 10,
+    "execspeed": 7,
+    "languages": [
+        "system"
+    ],
+    "uses": [
+    ],
+    "quality": 8,
+    "scope": [
+        "security"
+    ],
+    "score": {
+        "security": [
+            "sudokiller.sudokiller.*"
+        ]
+    },
+    "test": {
+        "findings": [
+            "core-image-minimal-scatest"
+        ]
+    }
+}

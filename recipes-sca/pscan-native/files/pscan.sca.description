@@ -1,0 +1,26 @@
+{
+    "buildspeed": 10,
+    "execspeed": 10,
+    "languages": [
+        "c"
+    ],
+    "uses": [
+    ],
+    "quality": 6,
+    "scope": [
+        "functional"
+    ],
+    "score": {
+        "functional": [
+            "pscan.pscan..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["pscan", "-h"], "returncode": 1}
+        ],
+        "findings": [
+            "busybox"
+        ]
+    }
+}

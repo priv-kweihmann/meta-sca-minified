@@ -1,0 +1,27 @@
+{
+    "buildspeed": 5,
+    "execspeed": 8,
+    "languages": [
+        "shell"
+    ],
+    "uses": [
+    ],
+    "quality": 10,
+    "scope": [
+        "functional",
+        "style"
+    ],
+    "score": {
+        "functional": [
+            "ShellCheck.ShellCheck..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["shellcheck-wrapper", "--help"], "returncode": 3}
+        ],
+        "findings": [
+            "busybox"
+        ]
+    }
+}

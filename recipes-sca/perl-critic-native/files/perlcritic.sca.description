@@ -1,0 +1,24 @@
+{
+    "buildspeed": 7,
+    "execspeed": 9,
+    "languages": [
+        "perl"
+    ],
+    "uses": [
+        "@perl"
+    ],
+    "quality": 10,
+    "scope": [
+        "functional"
+    ],
+    "score": {
+        "functional": [
+            "perlcritic.perlcritic..*"
+        ]
+    },
+    "test": {
+        "findings": [
+            "bad-perl"
+        ]
+    }
+}

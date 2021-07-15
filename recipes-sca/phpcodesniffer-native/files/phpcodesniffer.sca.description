@@ -1,0 +1,27 @@
+{
+    "buildspeed": 4,
+    "execspeed": 10,
+    "languages": [
+        "php",
+        "javascript",
+        "css"
+    ],
+    "uses": [
+        "@php"
+    ],
+    "quality": 7,
+    "scope": [
+        "functional",
+        "style"
+    ],
+    "score": {
+        "style": [
+            "phpcodesniffer.phpcodesniffer..*"
+        ]
+    },
+    "test": {
+        "findings": [
+            "bad-php"
+        ]
+    }
+}

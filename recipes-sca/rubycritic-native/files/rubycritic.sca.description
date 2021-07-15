@@ -1,0 +1,25 @@
+{
+    "buildspeed": 6,
+    "execspeed": 9,
+    "languages": [
+        "ruby"
+    ],
+    "uses": [
+        "@ruby"
+    ],
+    "online": true,
+    "quality": 8,
+    "scope": [
+        "style"
+    ],
+    "score": {
+        "style": [
+            "rubycritic.rubycritic..*"
+        ]
+    },
+    "test": {
+        "findings": [
+            "rubycritic-test"
+        ]
+    }
+}

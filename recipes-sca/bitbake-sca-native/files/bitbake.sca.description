@@ -1,0 +1,23 @@
+{
+    "buildspeed": 10,
+    "execspeed": 10,
+    "languages": [
+        "bitbake"
+    ],
+    "uses": [
+    ],
+    "quality": 9,
+    "scope": [
+        "functional"
+    ],
+    "score": {
+        "security": [
+            "bitbake.bitbake.*"
+        ]
+    },
+    "test": {
+        "findings": [
+            "bad-bitbake"
+        ]
+    }
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "buildspeed": {
+      "maximum": 10,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "description": {
+      "type": "string"
+    },
+    "execspeed": {
+      "maximum": 10,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "homepage": {
+      "type": "string"
+    },
+    "languages": {
+      "items": {
+        "pattern": "[a-z0-9]+",
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "uses": {
+      "items": {
+        "pattern": "@[a-z0-9]+",
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "online": {
+      "type": "boolean"
+    },
+    "quality": {
+      "maximum": 10,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "scope": {
+      "items": {
+        "enum": [
+          "security",
+          "functional",
+          "compliance",
+          "style"
+        ]
+      },
+      "type": "array"
+    },
+    "score": {
+      "additionalProperties": false,
+      "properties": {
+        "compliance": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "functional": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "security": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "style": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "test": {
+      "additionalProperties": false,
+      "properties": {
+        "findings": {
+          "items": {
+            "type": "string"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "integration": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "cmd": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "returncode": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "cmd",
+              "returncode"
+            ],
+            "type": "object"
+          },
+          "minLength": 1,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "buildspeed",
+    "execspeed",
+    "languages",
+    "quality",
+    "scope",
+    "score",
+    "test",
+    "uses",
+    "version"
+  ],
+  "type": "object"
+}

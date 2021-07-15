@@ -1,0 +1,27 @@
+{
+    "buildspeed": 2,
+    "execspeed": 10,
+    "languages": [
+        "kernel"
+    ],
+    "uses": [
+        "@python"
+    ],
+    "quality": 8,
+    "scope": [
+        "security"
+    ],
+    "score": {
+        "security": [
+            "kconfighard.kconfighard..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["kconfig-hardened-check", "--help"], "returncode": 0}
+        ],
+        "findings": [
+            "linux-yocto"
+        ]
+    }
+}

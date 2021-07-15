@@ -1,0 +1,27 @@
+{
+    "buildspeed": 8,
+    "execspeed": 7,
+    "languages": [
+        "c",
+        "lua"
+    ],
+    "uses": [
+    ],
+    "quality": 6,
+    "scope": [
+        "functional"
+    ],
+    "score": {
+        "functional": [
+            "tscancode.tscancode..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["tscancode", "--help"], "returncode": 0}
+        ],
+        "findings": [
+            "busybox"
+        ]
+    }
+}

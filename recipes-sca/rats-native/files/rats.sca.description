@@ -1,0 +1,31 @@
+{
+    "buildspeed": 8,
+    "execspeed": 10,
+    "languages": [
+        "c",
+        "perl",
+        "php",
+        "python",
+        "ruby"
+    ],
+    "uses": [
+    ],
+    "quality": 6,
+    "scope": [
+        "security"
+    ],
+    "score": {
+        "security": [
+            "rats.rats..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["rats", "--help"], "returncode": 1}
+        ],
+        "findings": [
+            "busybox",
+            "simple-c"
+        ]
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "buildspeed": 5,
+    "execspeed": 10,
+    "languages": [
+        "yaml"
+    ],
+    "uses": [
+        "@python"
+    ],
+    "quality": 8,
+    "scope": [
+        "style"
+    ],
+    "score": {
+        "style": [
+            "yamllint.yamllint..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["yamllint", "-h"], "returncode": 0}
+        ],
+        "findings": [
+            "bad-yaml"
+        ]
+    }
+}

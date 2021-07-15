@@ -1,0 +1,27 @@
+{
+    "buildspeed": 5,
+    "execspeed": 9,
+    "languages": [
+        "binary"
+    ],
+    "uses": [
+        "@python"
+    ],
+    "quality": 9,
+    "scope": [
+        "security"
+    ],
+    "score": {
+        "security": [
+            "pysymbolcheck.pysymbolcheck..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["pysymbolcheck", "--help"], "returncode": 0}
+        ],
+        "findings": [
+            "busybox"
+        ]
+    }
+}

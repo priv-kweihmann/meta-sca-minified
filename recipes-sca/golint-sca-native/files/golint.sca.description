@@ -1,0 +1,27 @@
+{
+    "buildspeed": 6,
+    "execspeed": 10,
+    "languages": [
+        "go"
+    ],
+    "uses": [
+        "@go"
+    ],
+    "quality": 7,
+    "scope": [
+        "style"
+    ],
+    "score": {
+        "style": [
+            "golint.golint..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["golint", "--help"], "returncode": 2}
+        ],
+        "findings": [
+            "bad-go"
+        ]
+    }
+}

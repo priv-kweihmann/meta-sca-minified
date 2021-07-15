@@ -1,0 +1,27 @@
+{
+    "buildspeed": 6,
+    "execspeed": 7,
+    "languages": [
+        "shell"
+    ],
+    "uses": [
+    ],
+    "quality": 8,
+    "scope": [
+        "functional",
+        "style"
+    ],
+    "score": {
+        "functional": [
+            "checkbashism.checkbashism..*"
+        ]
+    },
+    "test": {
+        "integration": [
+            {"cmd": ["checkbashisms.pl", "-h"], "returncode": 0}
+        ],
+        "findings": [
+            "busybox"
+        ]   
+    }
+}
