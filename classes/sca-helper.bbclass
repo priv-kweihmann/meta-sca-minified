@@ -104,7 +104,7 @@ def get_files_by_shebang(d, path, pattern, excludes=[]):
 def get_files_by_mimetype(d, path, mime, excludes=[]):
     import os
     import sys
-    sys.path.append(os.path.join(d.getVar("STAGING_DIR_NATIVE"), d.getVar("PYTHON_SITEPACKAGES_DIR")[1:]))
+    sys.path.insert(0, os.path.join(d.getVar("STAGING_DIR_NATIVE"), d.getVar("PYTHON_SITEPACKAGES_DIR")[1:]))
     try:
         import magic
         local_dirs = clean_split(d, "SCA_LOCAL_FILE_FILTER")
@@ -251,7 +251,7 @@ def sca_task_aftermath(d, tool, fatals=None):
         bb.warn("SCA has found {}".format(",".join(warn_log)))
 
     if any(_fatals):
-        bb.build.exec_func(d.getVar("do_sca_deploy"), d)
+        bb.build.exec_func("do_sca_deploy", d)
         _str_fatals = ["{} :{}:{} - {} - [{}]".format(i.GetPath(), i.Line, i.Column, i.Message, i.GetFormattedID()) for i in _fatals]
         bb.error("SCA has following fatal errors: {}".format("\n".join(_str_fatals)))
 
