@@ -8,6 +8,15 @@ inherit sca-helper-exec
 
 DEPENDS += "${@oe.utils.ifelse(sca_is_module_blacklisted(d, 'foo'), '', 'python3-python-magic-native')}"
 
+def find_file_in_layer(d, _file, _skipPath=""):
+    import os
+    import glob
+    for _dir in [x for x in d.getVar("BBLAYERS").split(" ") if x]:
+        files = [x for x in glob.glob("{}/**/{}".format(_dir, _file), recursive=True) if x != _skipPath]
+        if any(files):
+            return files[0]
+    return None
+
 def get_relative_source_path(d):
     import os
     source = d.getVar("S")
@@ -240,14 +249,13 @@ def get_local_includes(path):
 
 def sca_task_aftermath(d, tool, fatals=None):
     ## Write to final export
-    result_file = os.path.join(d.getVar("T"), sca_conv_export_get_deployname(d, tool))
-    conv = sca_conv_to_export(d, tool)
-    if isinstance(conv, bytes):
-        mode = "wb"
-    else:
-        mode = "w"
-    with open(result_file, mode) as o:
-        o.write(conv)
+    for item in sca_conv_to_export(d, tool):
+        if isinstance(item[0], bytes):
+            mode = "wb"
+        else:
+            mode = "w"
+        with open(os.path.join(d.getVar("T"), item[1]), mode) as o:
+            o.write(item[0])
 
     ## Evaluate
     _warnings = get_warnings_from_result(d)
