@@ -23,9 +23,9 @@ flawfinder,C/C++ security linter,https://github.com/david-a-wheeler/flawfinder,,
 flint,C/C++ linter,https://github.com/JossWhittle/FlintPlusPlus,,,,x,x,x,,,,,,,,,,,,,,x,
 gcc,GCC compiler issues and hardening,,,,,x,x,x,,,,,,,,,,,,,x,x,
 gixy,NGINX config security linter,https://github.com/yandex/gixy,,,x,,,,,,,,,,,,,,,x,x,,
+goconst,Find variables that could be constants in GO files,https://github.com/jgautheron/goconst,,,,x,,,,,,,x,,,,,,,,,,x
 golint,GO linter,https://github.com/golang/lint,,,,x,,,,,,,x,,,,,,,,,,x
 gosec,GO security linter,https://github.com/securego/gosec,,,,x,,,,,,,x,,,,,,,,x,,
-govet,GO linter,https://golang.org/cmd/vet/,,,,x,,,,,,,x,,,,,,,,,x,x
 htmlhint,HTML linter,https://github.com/htmlhint/HTMLHint,,x,x,x,,,,,,,,,,,,,,x,,x,
 image-summary,Aggregate all findings for package in an image,,,,x,,,,,,,,,,,,,,x,,x,x,x
 jshint,Javascript linter,https://github.com/jshint/jshint,,x,x,x,,,,,x,,,,,,,,,,,x,x
@@ -71,12 +71,11 @@ setuptoolslint,Lint python-setup.py,https://github.com/johnnoone/setuptools-pyli
 shellcheck,Shell script linter,https://github.com/koalaman/shellcheck,,,x,x,,,,x,,,,,,,,,,,,x,x
 slick,Shell script linter,https://github.com/mcandre/slick,,,x,x,,,,x,,,,,,,,,,,,x,
 sparse,C linter,https://sparse.wiki.kernel.org/index.php/Main_Page,,,,x,x,,,,,,,,,,,,,,,x,
-splint,C linter,https://github.com/splintchecker/splint,,,,x,x,,,,,,,,,,,,,,x,x,x
 standard,Javascript linter,https://github.com/standard/standard,,x,x,x,,,,,x,,,,,,,,,,,x,x
 stank,Shell script linter,https://github.com/mcandre/stank,,,x,x,,,,x,,,,,,,,,,,,x,x
 stylelint,CSS/SCSS linter,https://github.com/stylelint/stylelint,,,x,x,,,,,,,,,,,,,,x,,,x
 sudokiller,check on sudo,https://github.com/TH3xACE/SUDO_KILLER,,,x,,,,,,,,,x,,,,,,,x,,
-systemdlint,Systemd unit linter,https://github.com/priv-kweihmann/systemdlint,,,x,,,,,,,,,,,,,,,x,x,x,x
+systemdlint,Systemd unit linter,https://github.com/priv-kweihmann/systemdlint,,,x,x,,,,,,,,,,,,,,x,x,x,x
 textlint,Spelling and text linter,https://github.com/textlint/textlint,,x,,x,,,,,,,,,,x,,,,,,,x
 tiger,security audit and intrusion detection tool,http://www.nongnu.org/tiger/,,,x,,,,,,,,,x,,,,,,,x,,
 tlv,Find duplicate code,https://github.com/priv-kweihmann/tlv,manual enable,,x,x,x,x,x,,x,x,x,,,,,,,,x,,x
