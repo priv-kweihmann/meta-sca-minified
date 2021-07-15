@@ -24,6 +24,7 @@ SCA_ENABLED_MODULES_IMAGE ?= "\
                             flake8 \
                             gixy \
                             htmlhint \
+                            inspec \
                             jshint \
                             jsonlint \
                             lse \
@@ -56,6 +57,7 @@ SCA_SOURCES_DIR ?= "${IMAGE_ROOTFS}"
 
 SCA_MODE = "image"
 SCA_MODE_UPPER = "${@d.getVar('SCA_MODE').upper()}"
+SCA_ACTIVE_MODULES = ""
 
 def sca_on_image_init(d):
     import bb
@@ -73,7 +75,7 @@ def sca_on_image_init(d):
             enabledModules.append(item)
         except bb.parse.ParseError as exp:
             if d.getVar("SCA_VERBOSE_OUTPUT") != "0":
-                bb.note(str(exp))
+                sca_log_note(d, str(exp))
     if any(enabledModules):
         if d.getVar("SCA_VERBOSE_OUTPUT") == "1":
             bb.note("Using SCA Module(s) {}".format(",".join(sorted(enabledModules))))
@@ -91,4 +93,4 @@ def sca_on_image_init(d):
             enabledModules.append("image-summary")
             if d.getVar(func, False) is not None:
                 bb.build.exec_func(func, d, **get_bb_exec_ext_parameter_support(d))
-    d.setVar("SCA_ACTIVE_MODULES", " ".join(sorted(enabledModules)))
+    d.appendVar("SCA_ACTIVE_MODULES", " " + " ".join(sorted(enabledModules)))

@@ -14,6 +14,7 @@ inherit sca-global
 inherit sca-helper
 inherit sca-file-filter
 inherit sca-suppress
+inherit sca-image-backtrack
 
 inherit python3native
 
@@ -58,9 +59,9 @@ def do_sca_conv_msgcheck(d):
                     if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):
                         continue
                     if g.Severity in sca_allowed_warning_level(d):
-                        _findings.append(g)
+                        _findings += sca_backtrack_findings(d, g)
                 except Exception as exp:
-                    bb.note(str(exp))
+                    sca_log_note(d, str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -75,8 +76,8 @@ python do_sca_msgcheck() {
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), ".po", \
         sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
     for f in _files:
-        cmd_output += exec_wrap_check_output(_args, [f])
-        cmd_output += exec_wrap_check_output(_args, ["-c", f])
+        cmd_output += exec_wrap_check_output(d, _args, [f])
+        cmd_output += exec_wrap_check_output(d, _args, ["-c", f])
 
     with open(sca_raw_result_file(d, "msgcheck"), "w") as o:
         o.write(cmd_output)
