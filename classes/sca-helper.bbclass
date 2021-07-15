@@ -59,15 +59,13 @@ def xml_combine(d, *args):
 
 def _combine_x_entries(d, input_file, extra_key):
     import os
-    _filename = d.getVar(input_file)
-    _extra = d.getVar(extra_key) or ""
+    _filename = input_file
     res = []
     if _filename and os.path.isfile(_filename):
         _rules_file = _filename
         with open(_rules_file) as f:
-            res = f.readlines()
-    res += _extra.split(" ")
-    res = [x.strip() for x in res if x]
+            res = [x.strip(" \n") for x in f.readlines() if x.strip(" \n")]
+    res += clean_split(d, extra_key)
     return res
 
 
@@ -184,11 +182,11 @@ def get_files_by_extention_or_shebang(d, path, shebang, extentions, excludes=[])
     res = get_files_by_shebang(d, path, shebang, excludes) + get_files_by_extention(d, path, extentions, excludes)
     return sorted(list(set(res)))
 
-def get_suppress_entries(d):
-    return _combine_x_entries(d, "SCA_SUPRESS_FILE", "SCA_EXTRA_SUPPRESS")
+def get_suppress_entries(d, suppress_extra, suppress_file):
+    return _combine_x_entries(d, suppress_file, suppress_extra)
 
-def get_fatal_entries(d):
-    return _combine_x_entries(d, "SCA_FATAL_FILE", "SCA_EXTRA_FATAL")
+def get_fatal_entries(d, fatal_extra, fatal_file):
+    return _combine_x_entries(d, fatal_file, fatal_extra)
 
 def _get_x_from_result(d, lookup_key = "Severity", match_key = ""):
     _dm = sca_get_datamodel(d, d.getVar("SCA_DATAMODEL_STORAGE"))
