@@ -66,7 +66,8 @@ python do_sca_scancode() {
     import os
     import subprocess
 
-    os.environ["HOME"] = d.getVar("T")
+    os.environ["SCANCODE_CACHE"] = d.getVar("T")
+    os.environ["SCANCODE_TEMP"] = d.getVar("T")
     _args = ["scancode", "-l", "-c", "--json", sca_raw_result_file(d, "scancode_raw"),
              "--strip-root", "-n", d.getVar("BB_NUMBER_THREADS"), "--quiet"]
 
@@ -75,6 +76,7 @@ python do_sca_scancode() {
 }
 
 def scancode_get_license(d, _in):
+    import re
     _pn = d.getVar("PN")
     x = d.getVar("LICENSE_{}".format(_in))
     if not x:
@@ -85,7 +87,7 @@ def scancode_get_license(d, _in):
         x = "CLOSED"
     # Apply SPDXLICENSEMAP settings
     for rename_flag in d.getVarFlags("SPDXLICENSEMAP"):
-        x = x.replace(rename_flag, d.getVarFlag("SPDXLICENSEMAP", rename_flag))
+        x = re.sub(r"{}(\||&|\s+|$)".format(re.escape(rename_flag)), d.getVarFlag("SPDXLICENSEMAP", rename_flag), x)
     return x
 
 python do_sca_scancode_report() {
@@ -118,7 +120,7 @@ python do_sca_scancode_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/scancode-${SCA_MODE}-fatal")))
 }
 
-do_sca_scancode[doc] = "Lint C files with scancode"
+do_sca_scancode[doc] = "License compliance with scancode"
 do_sca_scancode_report[doc] = "Report findings of do_sca_scancode"
 addtask do_sca_scancode after do_compile before do_sca_tracefiles
 addtask do_sca_scancode_report after do_sca_tracefiles before do_sca_deploy

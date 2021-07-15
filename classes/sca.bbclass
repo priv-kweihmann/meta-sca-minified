@@ -7,6 +7,7 @@
 
 ## Settings can be found in sca-global
 inherit sca-global
+inherit sca-blacklist
 
 def sca_files_part_of_unspared_layer(d, files):
     import re
@@ -57,6 +58,10 @@ python sca_invoke_handler() {
         bb.debug(2, "Skip {} because of being a packagegroup, can't run SCA here".format(d.getVar("PN")))
         sca_mask_vars(d)
         return
+    if bb.data.inherits_class('nopackages', d):
+        bb.debug(2, "Skip {} because of inheriting nopackages, can't run SCA here".format(d.getVar("PN")))
+        sca_mask_vars(d)
+        return
     if d.getVar("SCA_SKIP_DEVTOOL") == "1":
         bb.debug(2, "Skip {} because of being under control of devtool".format(d.getVar("PN")))
         sca_mask_vars(d)
@@ -72,7 +77,7 @@ python sca_invoke_handler() {
         # so we quit here
         sca_mask_vars(d)
         return
-    if d.getVar("SCA_ENABLE") == "1":
+    if d.getVar("SCA_ENABLE") == "1" and not sca_is_module_blacklisted(d, ""):
         py2 = bb.data.inherits_class('pythonnative', d)
         if py2:
             # backup some value before invoking sca
