@@ -24,6 +24,7 @@ inherit sca-license-filter
 inherit sca-file-filter
 inherit sca-crossemu
 inherit sca-suppress
+inherit sca-image-backtrack
 
 SCA_RAW_RESULT_FILE[ansibleroles] = "txt"
 
@@ -69,7 +70,7 @@ def do_sca_conv_ansibleroles(d):
                         if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):
                             continue
                         if g.Severity in sca_allowed_warning_level(d):
-                            _findings.append(g)
+                            _findings += sca_backtrack_findings(d, g)
                 except Exception as exp:
                     bb.warn(str(exp))
 
@@ -128,7 +129,7 @@ fakeroot python do_sca_ansibleroles() {
             # Check if the package that is checked is installed
             if pb in _role_flags.keys():
                 if not any(intersect_lists(d, _installed_pkgs, _role_flags[pb].split(","))):
-                    bb.note("Skipping {}, as none of {} is installed".format(pb, _role_flags[pb]))
+                    sca_log_note(d, "Skipping {}, as none of {} is installed".format(pb, _role_flags[pb]))
                     continue
             sca_ansibleroles_create_config(d, rootfs_path, os.path.join(rootfs_path, "rolebook.yaml"), [pb])
             _tmp, _ = sca_crossemu(d, _args, [], "ansibleroles", "", nocreateroot=True, addargs=["-b", "/dev/shm:/dev/shm"])

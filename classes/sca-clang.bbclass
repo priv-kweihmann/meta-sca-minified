@@ -18,6 +18,7 @@ inherit sca-datamodel
 inherit sca-global
 inherit sca-helper
 inherit sca-suppress
+inherit sca-image-backtrack
 inherit sca-tracefiles
 
 SCA_RAW_RESULT_FILE[clang] = "txt"
@@ -66,9 +67,9 @@ def do_sca_conv_clang(d):
                     if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):
                         continue
                     if g.Severity in sca_allowed_warning_level(d):
-                        _findings.append(g)
+                        _findings += sca_backtrack_findings(d, g)
                 except Exception as exp:
-                    bb.note(str(exp))
+                    sca_log_note(d, str(exp))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -109,7 +110,7 @@ python do_sca_clang() {
         json.dump(compile_json, o)
 
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_CLANG_FILE_FILTER").split(" "), [])
-    cmd_output = exec_wrap_check_output(_args, _files, chunk_size=1)
+    cmd_output = exec_wrap_check_output(d, _args, _files, chunk_size=1)
 
     if os.path.exists(os.path.join(d.getVar("B"), "compile_commands.json")):
         os.remove(os.path.join(d.getVar("B"), "compile_commands.json"))

@@ -23,6 +23,7 @@ inherit sca-datamodel
 inherit sca-helper
 inherit sca-license-filter
 inherit sca-suppress
+inherit sca-image-backtrack
 inherit python3native
 
 def do_sca_conv_oelint(d, _files):
@@ -69,9 +70,9 @@ def do_sca_conv_oelint(d, _files):
                     if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):
                         continue
                     if g.Severity in sca_allowed_warning_level(d):
-                        _findings.append(g)
+                        _findings += sca_backtrack_findings(d, g)
                 except Exception as exp:
-                    bb.note(str(exp))
+                    sca_log_note(d, str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -113,7 +114,7 @@ python do_sca_oelint_core() {
         _args += ["--customrules={}".format(x)]
     _files = [x.strip() for x in d.getVar("BBINCLUDED").split(" ") if x.strip().endswith(".bb") or x.strip().endswith(".bbappend")]
 
-    cmd_output = exec_wrap_check_output(_args, _files)
+    cmd_output = exec_wrap_check_output(d, _args, _files)
 
     with open(sca_raw_result_file(d, "oelint"), "w") as o:
         o.write(cmd_output)
