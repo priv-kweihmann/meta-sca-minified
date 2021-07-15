@@ -63,7 +63,7 @@ DEPENDS += "upc upc-native"
 def do_sca_conv_upc(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -74,7 +74,7 @@ def do_sca_conv_upc(d):
         "W" : "warning"
     }
 
-    _suppress = sca_suppress_init(d, "SCA_UPC_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_UPC_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/upc-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -97,7 +97,7 @@ def do_sca_conv_upc(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -123,15 +123,7 @@ fakeroot python do_sca_upc() {
                        d.expand("${STAGING_DATADIR_NATIVE}/upc-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_upc_image"
-
-python do_sca_deploy_upc_image() {
-    sca_conv_deploy(d, "upc")
-}
-
 do_sca_upc[doc] = "Find priviledge esacalation vectors in image"
-do_sca_deploy_upc_image[doc] = "Deploy results of do_sca_upc"
-addtask do_sca_upc before do_image_complete after do_image
-addtask do_sca_deploy_upc_image before do_image_complete after do_sca_upc
+addtask do_sca_upc before do_sca_deploy after do_image
 
 DEPENDS += "sca-image-upc-rules-native"

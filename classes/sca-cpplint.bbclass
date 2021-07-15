@@ -20,7 +20,7 @@ inherit sca-tracefiles
 def do_sca_conv_cpplint(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -58,7 +58,7 @@ def do_sca_conv_cpplint(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -66,7 +66,7 @@ do_sca_cpplint[vardepsexclude] += "BB_NUMBER_THREADS"
 python do_sca_cpplint() {
     import os
     import subprocess
-    
+
     os.environ["OTMP"] = d.getVar("T")
     _args = ["cpplint-multi"]
     _args += ["--jobs={}".format(d.getVar("BB_NUMBER_THREADS"))]
@@ -74,18 +74,12 @@ python do_sca_cpplint() {
     _args += ["--quiet"]
     _args += ["--root={}".format(d.getVar("B", True))]
 
-    ## Run
-    cmd_output = ""
-    _files = get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_CPPLINT_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_CPPLINT_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
-    if any(_files):
-        _args += _files
-        try:
-            cmd_output = subprocess.check_output(_args, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+    ## Run
+    cmd_output = exec_wrap_check_output(_args, _files)
 
     with open(sca_raw_result_file(d, "cpplint"), "w") as o:
         o.write(cmd_output)
@@ -103,17 +97,9 @@ python do_sca_cpplint_report() {
                         d.expand("${STAGING_DATADIR_NATIVE}/cpplint-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_cpplint"
-
-python do_sca_deploy_cpplint() {
-    sca_conv_deploy(d, "cpplint")
-}
-
 do_sca_cpplint[doc] = "Lint C/C++ files with cpplint"
 do_sca_cpplint_report[doc] = "Report findings of do_sca_cpplint"
-do_sca_deploy_cpplint[doc] = "Deploy results of do_sca_cpplint"
 addtask do_sca_cpplint after do_compile before do_sca_tracefiles
-addtask do_sca_cpplint_report after do_sca_tracefiles
-addtask do_sca_deploy_cpplint after do_sca_cpplint_report before do_package
+addtask do_sca_cpplint_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "cpplint-native sca-recipe-cpplint-rules-native"

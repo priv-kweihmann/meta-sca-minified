@@ -21,12 +21,12 @@ inherit sca-tracefiles
 def do_sca_conv_phpcodefixer(d):
     import os
     import json
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
-    
+
     _findings = []
-    _suppress = sca_suppress_init(d, "SCA_PHPCODEFIXER_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_PHPCODEFIXER_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/phpcodefixer-${SCA_MODE}-suppress"))
 
     if os.path.exists(sca_raw_result_file(d, "phpcodefixer")):
@@ -54,7 +54,7 @@ def do_sca_conv_phpcodefixer(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -62,8 +62,6 @@ def do_sca_conv_phpcodefixer(d):
 python do_sca_phpcodefixer() {
     import os
     import subprocess
-
-    cmd_output = ""
 
     ## Run
     _args = [os.path.join(d.getVar("STAGING_BINDIR_NATIVE"), "phpcodefixer/vendor/bin/phpcf")]
@@ -73,15 +71,12 @@ python do_sca_phpcodefixer() {
     if d.getVar("SCA_PHPCODEFIXER_PHP_VERSION"):
         _args += ["--target={}".format(d.getVar("SCA_PHPCODEFIXER_PHP_VERSION"))]
     _args += ["-n"]
-    
+
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), ".*php", [".php"], \
                                                 sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
-    
-    if any(_files):    
-        try:
-            cmd_output += subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
+
+    cmd_output = exec_wrap_check_output(_args, _files, combine=exec_wrap_combine_json_subarray, key="problems",
+                                        default_val={"problems": []})
 
     with open(sca_raw_result_file(d, "phpcodefixer"), "w") as o:
         o.write(cmd_output)
@@ -95,21 +90,13 @@ python do_sca_phpcodefixer_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "phpcodefixer", get_fatal_entries(d, "SCA_PHPCODEFIXER_EXTRA_FATAL", 
+    sca_task_aftermath(d, "phpcodefixer", get_fatal_entries(d, "SCA_PHPCODEFIXER_EXTRA_FATAL",
                         d.expand("${STAGING_DATADIR_NATIVE}/phpcodefixer-${SCA_MODE}-fatal")))
-}
-
-SCA_DEPLOY_TASK = "do_sca_deploy_phpcodefixer"
-
-python do_sca_deploy_phpcodefixer() {
-    sca_conv_deploy(d, "phpcodefixer")
 }
 
 do_sca_phpcodefixer[doc] = "Lint php scripts with phpcodefixer in workspace"
 do_sca_phpcodefixer_report[doc] = "Report findings of do_sca_phpcodefixer"
-do_sca_deploy_phpcodefixer[doc] = "Deploy results of do_sca_phpcodefixer"
 addtask do_sca_phpcodefixer after do_configure before do_sca_tracefiles
-addtask do_sca_phpcodefixer_report after do_sca_tracefiles
-addtask do_sca_deploy_phpcodefixer after do_sca_phpcodefixer_report before do_package
+addtask do_sca_phpcodefixer_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "phpcodefixer-native sca-recipe-phpcodefixer-rules-native"

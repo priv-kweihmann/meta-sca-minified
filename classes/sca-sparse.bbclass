@@ -25,7 +25,7 @@ def do_sca_conv_sparse(d):
     import os
     import re
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -79,18 +79,16 @@ python do_sca_sparse() {
     _args += ["-gcc-base-dir", os.path.join(d.getVar("STAGING_DIR"), d.getVar("prefix"))]
     _args += ["-fmax-warnings=1000000"]
     _args += clean_split(d, "SCA_SPARSE_WARNINGS")
-    _files = get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_SPARSE_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_SPARSE_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## Run
     cmd_output = ""
     for _f in _files:
-        try:
-            cmd_output += subprocess.check_output(_args + [_f], universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
+        cmd_output += exec_wrap_check_output(_args, [_f])
+
     with open(sca_raw_result_file(d, "sparse"), "w") as o:
         o.write(cmd_output)
 }
@@ -107,17 +105,9 @@ python do_sca_sparse_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/sparse-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_sparse"
-
-python do_sca_deploy_sparse() {
-    sca_conv_deploy(d, "sparse")
-}
-
 do_sca_sparse[doc] = "Lint C files with sparse"
 do_sca_sparse_report[doc] = "Report findings of do_sca_sparse"
-do_sca_deploy_sparse[doc] = "Deploy results of do_sca_sparse"
 addtask do_sca_sparse after do_compile before do_sca_tracefiles
-addtask do_sca_sparse_report after do_sca_tracefiles
-addtask do_sca_deploy_sparse after do_sca_sparse_report before do_package
+addtask do_sca_sparse_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "sparse-native sca-recipe-sparse-rules-native"

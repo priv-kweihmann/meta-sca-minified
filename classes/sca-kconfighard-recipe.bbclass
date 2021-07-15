@@ -21,7 +21,7 @@ DEPENDS += "kconfig-hardened-check-native sca-recipe-kconfighard-rules-native"
 def do_sca_conv_kconfighard(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -49,7 +49,7 @@ def do_sca_conv_kconfighard(d):
                     if not result_fail:
                         continue
                     clean_result = m.group("result").strip().replace("FAIL:", "").replace("OK:", "").replace("\"", "").strip()
-    
+
                     g = sca_get_model_class(d,
                                             PackageName=package_name,
                                             Tool="kconfighard",
@@ -69,7 +69,7 @@ def do_sca_conv_kconfighard(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -82,7 +82,7 @@ python do_sca_kconfighard() {
         if not os.path.exists(os.path.join(d.getVar("B"), "config")):
             os.symlink(os.path.join(d.getVar("B"), ".config"), os.path.join(d.getVar("B"), "config"))
 
-        _args = ["kconfig-hardened-check"]    
+        _args = ["kconfig-hardened-check"]
         _args += ["-c", os.path.join(d.getVar("B"), ".config")]
 
         cmd_output = ""
@@ -109,13 +109,5 @@ python do_sca_kconfighard() {
                             d.expand("${STAGING_DATADIR_NATIVE}/kconfighard-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_kconfighard"
-
-python do_sca_deploy_kconfighard() {
-    sca_conv_deploy(d, "kconfighard")
-}
-
 do_sca_kconfighard[doc] = "Scan for kernel config hardening options"
-do_sca_deploy_kconfighard[doc] = "Deploy results of do_sca_kconfighard"
-addtask do_sca_kconfighard before do_compile after do_configure
-addtask do_sca_deploy_kconfighard after do_sca_kconfighard before do_compile
+addtask do_sca_kconfighard before do_sca_deploy after do_configure

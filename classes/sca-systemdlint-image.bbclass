@@ -25,7 +25,7 @@ DEPENDS += "python3-systemdlint-native"
 def do_sca_conv_systemdlint(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -37,7 +37,7 @@ def do_sca_conv_systemdlint(d):
         "info": "info"
     }
 
-    _suppress = sca_suppress_init(d, "SCA_SYSTEMDLINT_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_SYSTEMDLINT_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/systemdlint-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -61,7 +61,7 @@ def do_sca_conv_systemdlint(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -72,7 +72,6 @@ python do_sca_systemdlint() {
 
     _args = ['systemdlint']
     _args += ["--rootpath={}".format(d.getVar("SCA_SOURCES_DIR"))]
-    _args += ["--output={}".format(sca_raw_result_file(d, "systemdlint"))]
     if d.getVar("SCA_SYSTEMDLINT_SYSTEMD_VERSION"):
         _args += ["--sversion={}".format(d.getVar("SCA_SYSTEMDLINT_SYSTEMD_VERSION"))]
     _files = []
@@ -80,15 +79,10 @@ python do_sca_systemdlint() {
         _files += get_files_by_extention(d, path,  d.getVar("SCA_SYSTEMDLINT_FILES"), \
                                             sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
-    with open(sca_raw_result_file(d, "systemdlint"), "w") as o:
-        o.write("")
+    cmd_output = exec_wrap_check_output(_args, _files)
 
-    if any(_files):
-        _args += _files
-        try:
-            subprocess.check_output(_args, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            bb.warn(str(e))
+    with open(sca_raw_result_file(d, "systemdlint"), "w") as o:
+        o.write(cmd_output)
 
     ## Create data model
     d.setVar("SCA_DATAMODEL_STORAGE", "{}/systemdlint.dm".format(d.getVar("T")))
@@ -100,15 +94,7 @@ python do_sca_systemdlint() {
                        d.expand("${STAGING_DATADIR_NATIVE}/systemdlint-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_systemdlint_image"
-
-python do_sca_deploy_systemdlint_image() {
-    sca_conv_deploy(d, "systemdlint")
-}
-
 do_sca_systemdlint[doc] = "Lint systemd unit files in image"
-do_sca_deploy_systemdlint_image[doc] = "Deploy results of do_sca_systemdlint"
-addtask do_sca_systemdlint before do_image_complete after do_image
-addtask do_sca_deploy_systemdlint_image before do_image_complete after do_sca_systemdlint
+addtask do_sca_systemdlint before do_sca_deploy after do_image
 
 DEPENDS += "sca-image-systemdlint-rules-native"

@@ -16,7 +16,7 @@ SCA_TLV_MINTOKEN ?= "50"
 def do_sca_conv_tlv(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -50,7 +50,7 @@ def do_sca_conv_tlv(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -67,14 +67,10 @@ python do_sca_tlv_core() {
     _args += ["--jobs={}".format(d.getVar("BB_NUMBER_THREADS"))]
 
     ## Run
-    _files = get_files_by_glob(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_TLV_FILES"),    
+    _files = get_files_by_glob(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_TLV_FILES"),
                                sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
-    cmd_output = ""
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args + _files, universal_newlines=True)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+
+    cmd_output = exec_wrap_check_output(_args, _files)
     with open(sca_raw_result_file(d, "tlv"), "w") as o:
         o.write(cmd_output)
 }

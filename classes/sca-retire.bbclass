@@ -18,7 +18,7 @@ inherit sca-tracefiles
 def do_sca_conv_retire(d):
     import os
     import json
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -41,7 +41,7 @@ def do_sca_conv_retire(d):
             try:
                 content = json.load(f)
             except json.JSONDecodeError as e:
-                bb.warn(str(e))
+                bb.note(str(e))
             for item in content:
                 try:
                     _file = item["file"]
@@ -63,7 +63,7 @@ def do_sca_conv_retire(d):
                             if g.Severity in sca_allowed_warning_level(d):
                                 _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -73,19 +73,14 @@ python do_sca_retire() {
 
     _args = ["retire", "-c", "--outputformat", "jsonsimple", "--path", d.getVar("SCA_SOURCES_DIR")]
 
-    cmd_output = ""
-
-    _files = get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_RETIRE_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_RETIRE_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## Run
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files, combine=exec_wrap_combine_json, default_val={})
+
     with open(sca_raw_result_file(d, "retire"), "w") as o:
         if not cmd_output:
             cmd_output = "[]"
@@ -100,21 +95,13 @@ python do_sca_retire_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "retire", get_fatal_entries(d, "SCA_RETIRE_EXTRA_FATAL", 
+    sca_task_aftermath(d, "retire", get_fatal_entries(d, "SCA_RETIRE_EXTRA_FATAL",
                        d.expand("${STAGING_DATADIR_NATIVE}/retire-${SCA_MODE}-fatal")))
-}
-
-SCA_DEPLOY_TASK = "do_sca_deploy_retire"
-
-python do_sca_deploy_retire() {
-    sca_conv_deploy(d, "retire")
 }
 
 do_sca_retire[doc] = "Find vulnerable js code"
 do_sca_retire_report[doc] = "Report finding of do_sca_retire"
-do_sca_deploy_retire[doc] = "Deploy results of do_sca_retire"
 addtask do_sca_retire after do_install before do_sca_tracefiles
-addtask do_sca_retire_report after do_sca_tracefiles
-addtask do_sca_deploy_retire after do_sca_retire_report before do_package
+addtask do_sca_retire_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "retire-native sca-recipe-retire-rules-native"

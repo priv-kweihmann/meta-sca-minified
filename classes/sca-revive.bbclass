@@ -20,7 +20,7 @@ inherit sca-tracefiles
 def do_sca_conv_revive(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -53,7 +53,7 @@ def do_sca_conv_revive(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -63,19 +63,13 @@ python do_sca_revive() {
 
     _args = ["revive", "-formatter", "unix"]
 
-    cmd_output = ""
-
-    _files = get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_REVIVE_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_REVIVE_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## Run
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files)
     with open(sca_raw_result_file(d, "revive"), "w") as o:
         o.write(cmd_output)
 }
@@ -92,17 +86,9 @@ python do_sca_revive_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/revive-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_revive"
-
-python do_sca_deploy_revive() {
-    sca_conv_deploy(d, "revive")
-}
-
 do_sca_revive[doc] = "Lint go code with revive"
 do_sca_revive_report[doc] = "Report findings of do_sca_revive"
-do_sca_deploy_revive[doc] = "Deploy results of do_sca_revive"
 addtask do_sca_revive after do_configure before do_sca_tracefiles
-addtask do_sca_revive_report after do_sca_tracefiles
-addtask do_sca_deploy_revive after do_sca_revive_report before do_package
+addtask do_sca_revive_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "revive-native sca-recipe-revive-rules-native"

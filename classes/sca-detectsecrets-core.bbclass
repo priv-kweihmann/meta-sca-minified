@@ -20,13 +20,13 @@ DEPENDS += "python3-detect-secrets-native"
 def do_sca_conv_detectsecrets(d):
     import os
     import json
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
     items = []
     __excludes = sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA"))
-    __suppress = sca_suppress_init(d, "SCA_DETECTSECRETS_EXTRA_SUPPRESS", 
+    __suppress = sca_suppress_init(d, "SCA_DETECTSECRETS_EXTRA_SUPPRESS",
                                     d.expand("${STAGING_DATADIR_NATIVE}/detectsecrets-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -59,7 +59,7 @@ def do_sca_conv_detectsecrets(d):
                         if g.Severity in sca_allowed_warning_level(d):
                             _findings.append(g)
                     except Exception as exp:
-                        bb.warn(str(exp))
+                        bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -77,12 +77,7 @@ python do_sca_detectsecrets_core() {
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), "",
                                 sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
-    cmd_output = ""
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files, combine=exec_wrap_combine_json_subdict, key="results", default_val={"results": {}})
 
     with open(sca_raw_result_file(d, "detectsecrets"), "w") as o:
         o.write(cmd_output)
@@ -95,6 +90,6 @@ python do_sca_detectsecrets_core_report() {
     dm_output = do_sca_conv_detectsecrets(d)
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
-    sca_task_aftermath(d, "detectsecrets", get_fatal_entries(d, "SCA_DETECTSECRETS_EXTRA_FATAL", 
+    sca_task_aftermath(d, "detectsecrets", get_fatal_entries(d, "SCA_DETECTSECRETS_EXTRA_FATAL",
                        d.expand("${STAGING_DATADIR_NATIVE}/detectsecrets-${SCA_MODE}-fatal")))
 }

@@ -1131,13 +1131,13 @@ def sca_yara_get_description(d, raw):
 def do_sca_conv_yara(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
     pattern = r"^(?P<id>[a-zA-z_0-9]+)\s\[(?P<attr>.*?)\]\s(?P<file>.*)$"
 
-    _suppress = sca_suppress_init(d, "SCA_UPC_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_UPC_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/yara-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -1163,7 +1163,7 @@ def do_sca_conv_yara(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -1194,15 +1194,7 @@ python do_sca_yara() {
                        d.expand("${STAGING_DATADIR_NATIVE}/yara-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_yara_image"
-
-python do_sca_deploy_yara_image() {
-    sca_conv_deploy(d, "yara")
-}
-
 do_sca_yara[doc] = "Find suspious/malware vectors in image"
-do_sca_deploy_yara_image[doc] = "Deploy results of do_sca_yara"
-addtask do_sca_yara before do_image_complete after do_image
-addtask do_sca_deploy_yara_image before do_image_complete after do_sca_yara
+addtask do_sca_yara before do_sca_deploy after do_image
 
 DEPENDS += "sca-image-yara-rules-native"

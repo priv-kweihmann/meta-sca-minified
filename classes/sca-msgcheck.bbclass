@@ -20,7 +20,7 @@ inherit python3native
 def do_sca_conv_msgcheck(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -60,7 +60,7 @@ def do_sca_conv_msgcheck(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -75,17 +75,9 @@ python do_sca_msgcheck() {
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), ".po", \
         sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
     for f in _files:
-        try:
-            _targs = _args + [f]
-            cmd_output += subprocess.check_output(_targs, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
-        try:
-            _targs = _args + ["-c", f]
-            cmd_output += subprocess.check_output(_targs, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
-    
+        cmd_output += exec_wrap_check_output(_args, [f])
+        cmd_output += exec_wrap_check_output(_args, ["-c", f])
+
     with open(sca_raw_result_file(d, "msgcheck"), "w") as o:
         o.write(cmd_output)
 
@@ -99,15 +91,7 @@ python do_sca_msgcheck() {
                         d.expand("${STAGING_DATADIR_NATIVE}/msgcheck-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_msgcheck"
-
-python do_sca_deploy_msgcheck() {
-    sca_conv_deploy(d, "msgcheck")
-}
-
 do_sca_msgcheck[doc] = "Lint i18n files"
-do_sca_deploy_msgcheck[doc] = "Deploy results of do_sca_msgcheck"
-addtask do_sca_msgcheck after do_configure before do_install
-addtask do_sca_deploy_msgcheck after do_sca_msgcheck before do_package
+addtask do_sca_msgcheck after do_configure before do_sca_deploy
 
 DEPENDS += "python3-msgcheck-native sca-recipe-msgcheck-rules-native"

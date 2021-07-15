@@ -20,7 +20,7 @@ DEPENDS += "libxml2-native"
 def do_sca_conv_xmllint(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -50,7 +50,7 @@ def do_sca_conv_xmllint(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -65,13 +65,8 @@ python do_sca_xmllint_core() {
 
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_XMLLINT_FILE_FILTER"), \
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
-    cmd_output = ""
-    if any(_files):
-        _args += _files    
-        try:
-            cmd_output = subprocess.check_output(_args, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+
+    cmd_output = exec_wrap_check_output(_args, _files)
 
     with open(sca_raw_result_file(d, "xmllint"), "w") as o:
         o.write(cmd_output)
