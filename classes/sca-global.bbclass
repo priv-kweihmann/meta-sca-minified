@@ -85,6 +85,7 @@ SCA_AVAILABLE_MODULES ?= "\
                           bitbake \
                           cbmc \
                           checkbashism \
+                          checksec \
                           configcheck \
                           cppcheck \
                           cpplint \
@@ -98,7 +99,9 @@ SCA_AVAILABLE_MODULES ?= "\
                           flint \
                           gcc \
                           gixy \
+                          goconsistent \
                           goconst \
+                          golicensecheck \
                           golint \
                           gosec \
                           htmlhint \
@@ -117,6 +120,7 @@ SCA_AVAILABLE_MODULES ?= "\
                           perlcritic \
                           pkgqaenc \
                           proselint \
+                          protolint \
                           pscan \
                           pyfindinjection \
                           pylint \
@@ -131,6 +135,7 @@ SCA_AVAILABLE_MODULES ?= "\
                           revive \
                           rubycritic \
                           safety \
+                          semgrep \
                           setuptoolslint \
                           shellcheck \
                           slick \
@@ -150,6 +155,31 @@ SCA_AVAILABLE_MODULES ?= "\
                           yamllint \
                           yara \
                         "
+# additional layer requirements
+SCA_AVAILABLE_MODULES[clang] = "clang-layer"
+SCA_AVAILABLE_MODULES[inspec] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[luacheck] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[phan] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[phpcodefixer] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[phpcodesniffer] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[phpmd] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[phpsecaudit] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[phpstan] = "openembedded-layer"
+SCA_AVAILABLE_MODULES[progpilot] = "openembedded-layer"
+
+# Modules using crossemu support, because they need some extra "love"
+_SCA_CROSSEMU_MODULES = "\
+    ansibleroles \
+    checksec \
+    configcheck \
+    inspec \
+    lse \
+    lynis \
+    nixauditor \
+    reconbf \
+    sudokiller \
+    tiger \
+"
 
 SCA_ENABLED_MODULES := "${SCA_ENABLED_MODULES_${SCA_MODE_UPPER}}"
 
