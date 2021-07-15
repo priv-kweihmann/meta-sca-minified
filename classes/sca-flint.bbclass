@@ -15,6 +15,7 @@ inherit sca-datamodel
 inherit sca-global
 inherit sca-helper
 inherit sca-suppress
+inherit sca-image-backtrack
 inherit sca-tracefiles
 
 def do_sca_conv_flint(d):
@@ -56,7 +57,7 @@ def do_sca_conv_flint(d):
                     if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):
                         continue
                     if g.Severity in sca_allowed_warning_level(d):
-                        _findings.append(g)
+                        _findings += sca_backtrack_findings(d, g)
                 except Exception:
                     pass
     sca_add_model_class_list(d, _findings)
@@ -79,7 +80,7 @@ python do_sca_flint() {
     cur_dir = os.getcwd()
     os.chdir(d.getVar("B", True))
 
-    cmd_output = exec_wrap_check_output(_args, _files)
+    cmd_output = exec_wrap_check_output(d, _args, _files)
 
     with open(sca_raw_result_file(d, "flint"), "w") as o:
         o.write(cmd_output)

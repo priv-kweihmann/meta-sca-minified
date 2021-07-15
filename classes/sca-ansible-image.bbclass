@@ -49,8 +49,11 @@ inherit sca-datamodel
 inherit sca-global
 inherit sca-helper
 inherit sca-suppress
+inherit sca-image-backtrack
 
 inherit python3-dir
+
+DEPENDS += "python3-ansible-native ansible-sca-native sca-image-ansible-rules-native"
 
 def create_inventory(d, target_path):
     import sys
@@ -138,7 +141,7 @@ def do_sca_conv_ansible(d):
             try:
                 jobj = json.load(f)
             except Exception as e:
-                bb.note(str(e))
+                sca_log_note(d, str(e))
         for k, v in jobj.items():
             for _play in v["plays"]:
                 _pb_key = _play["play"]
@@ -168,9 +171,9 @@ def do_sca_conv_ansible(d):
                             if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):
                                 continue
                             if g.Severity in sca_allowed_warning_level(d):
-                                _findings.append(g)
+                                _findings += sca_backtrack_findings(d, g)
                     except Exception as e:
-                        bb.note(str(e))
+                        sca_log_note(d, str(e))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -180,8 +183,8 @@ python do_sca_ansible() {
     import glob
     import subprocess
 
-    _inventory = "ansible_inv.yaml"
-    _configuration = "ansible.cfg"
+    _inventory = os.path.join(d.getVar("T"), "ansible_inv.yaml")
+    _configuration = os.path.join(d.getVar("T"), "ansible.cfg")
     create_inventory(d, _inventory)
     create_configuration(d, _configuration)
 
@@ -191,6 +194,7 @@ python do_sca_ansible() {
     os.environ["ANSIBLE_LOCALHOST_WARNING"] = "False"
     os.environ["ANSIBLE_LOCAL_TEMP"] = d.getVar("T")
     os.environ["ANSIBLE_REMOTE_TEMP"] = d.getVar("T")
+    os.environ["ANSIBLE_CONFIG"] = _configuration
     os.environ["HOME"] = d.getVar("T")
     _args = ["ansible-playbook"]
     _args += ["--check"]
@@ -211,8 +215,8 @@ python do_sca_ansible() {
             try:
                 json_output[os.path.basename(playbook)] = json.loads(cmd_output)
             except json.JSONDecodeError as e:
-                bb.note(str(e))
-                bb.note(str(cmd_output))
+                sca_log_note(d, str(e))
+                sca_log_note(d, str(cmd_output))
 
     with open(sca_raw_result_file(d, "ansible"), "w") as o:
         json.dump(json_output, o)
@@ -231,5 +235,3 @@ python do_sca_ansible() {
 
 do_sca_ansible[doc] = "Audit image with ansible playbooks"
 addtask do_sca_ansible before do_sca_deploy after do_image
-
-DEPENDS += "python3-ansible-native ansible-sca-native sca-image-ansible-rules-native"
