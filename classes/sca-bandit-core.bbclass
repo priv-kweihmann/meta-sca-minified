@@ -18,7 +18,7 @@ SCA_RAW_RESULT_FILE[bandit] = "json"
 def do_sca_conv_bandit(d):
     import os
     import json
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -29,7 +29,7 @@ def do_sca_conv_bandit(d):
     }
 
     _findings = []
-    _suppress = sca_suppress_init(d, "SCA_BANDIT_EXTRA_FATAL", 
+    _suppress = sca_suppress_init(d, "SCA_BANDIT_EXTRA_FATAL",
                     d.expand("${STAGING_DATADIR_NATIVE}/bandit-${SCA_MODE}-suppress"))
 
     if os.path.exists(sca_raw_result_file(d, "bandit")):
@@ -37,7 +37,7 @@ def do_sca_conv_bandit(d):
             try:
                 jobj = json.load(f)
             except Exception as e:
-                bb.warn(str(e))
+                bb.note(str(e))
                 pass
             if isinstance(jobj, dict):
                 if "results" in jobj.keys():
@@ -62,9 +62,24 @@ def do_sca_conv_bandit(d):
                             if g.Severity in sca_allowed_warning_level(d):
                                 _findings.append(g)
                         except Exception as exp:
-                            bb.warn(str(exp))
+                            bb.note(str(exp))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
+
+def exec_wrap_combine_json_bandit(a, b, **kwargs):
+    import json
+    try:
+        with open(kwargs["sourcefile"]) as i:
+            b = json.load(i)
+    except:
+        b = {"results": []}
+
+    try:
+        a = json.loads(a)
+        a["results"] += b["results"]
+    except:
+        a = b
+    return json.dumps(a)
 
 python do_sca_bandit_core() {
     import os
@@ -77,16 +92,13 @@ python do_sca_bandit_core() {
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_PYTHON_SHEBANG"), ".py",
                                 sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
-    with open(sca_raw_result_file(d, "bandit"), "w") as o:
-        json.dump([], o)
 
-    if any(_files):
-        _args += _files
-        cmd_output = ""
-        try:
-            cmd_output = subprocess.check_output(_args, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files,
+                                        combine=exec_wrap_combine_json_bandit, default_val={"results": []},
+                                        sourcefile=sca_raw_result_file(d, "bandit"))
+
+    with open(sca_raw_result_file(d, "bandit"), "w") as o:
+        o.write(cmd_output)
 }
 
 python do_sca_bandit_core_report() {
@@ -97,6 +109,6 @@ python do_sca_bandit_core_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "bandit", get_fatal_entries(d, "SCA_BANDIT_EXTRA_SUPPRESS", 
+    sca_task_aftermath(d, "bandit", get_fatal_entries(d, "SCA_BANDIT_EXTRA_SUPPRESS",
                         d.expand("${STAGING_DATADIR_NATIVE}/bandit-${SCA_MODE}-fatal")))
 }

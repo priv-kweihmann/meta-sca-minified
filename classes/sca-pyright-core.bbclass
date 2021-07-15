@@ -76,12 +76,12 @@ def do_sca_conv_pyright(d):
     import os
     import json
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
     _findings = []
-    _suppress = sca_suppress_init(d, "SCA_PYRIGHT_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_PYRIGHT_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/pyright-${SCA_MODE}-suppress"))
 
     _severity_map = {
@@ -111,8 +111,9 @@ def do_sca_conv_pyright(d):
                         if g.Severity in sca_allowed_warning_level(d):
                             _findings.append(g)
                     except Exception as exp:
-                        bb.warn(str(exp))
+                        bb.note(str(exp))
         except Exception as e:
+            bb.note(str(e))
             pass
 
     sca_add_model_class_list(d, _findings)
@@ -132,9 +133,20 @@ def sca_create_pyright_config(d, excludes, includes):
         res[i] = True
     return res
 
-def sca_chunckify_input(_in, n):
-    for i in range(0, len(_in), n):
-        yield _in[i:i + n]
+def exec_wrap_combine_json_pyright(a, b, **kwargs):
+    import json
+    if not b.strip().endswith("}"):
+        b = b[:b.rfind("}") + 1]
+    try:
+        b = json.loads(b)
+    except:
+        b = {kwargs["key"]: []}
+    try:
+        a = json.loads(a)
+        a[kwargs["key"]] += b[kwargs["key"]]
+    except:
+        a = b
+    return json.dumps(a)
 
 python do_sca_pyright_core() {
     import os
@@ -148,9 +160,7 @@ python do_sca_pyright_core() {
     _args += ["-p", _config_path]
 
     ## Run
-    cmd_output = {}
-
-    _includes = [   d.getVar("SCA_SOURCES_DIR") + "/*",    
+    _includes = [   d.getVar("SCA_SOURCES_DIR") + "/*",
                     d.getVar("SCA_SOURCES_DIR") + "/**/*",
                     os.path.join(d.getVar("STAGING_DIR"), d.getVar("libdir").lstrip("/"), d.getVar("PYTHON_DIR")) + "/*",
                     os.path.join(d.getVar("STAGING_DIR"), d.getVar("libdir").lstrip("/"), d.getVar("PYTHON_DIR")) + "/**/*",
@@ -161,6 +171,7 @@ python do_sca_pyright_core() {
 
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_PYTHON_SHEBANG"), ".py", _excludes)
 
+    cmd_output = ""
     if any(_files):
         with open(_config_path, "w") as o:
             json.dump(sca_create_pyright_config(d, _excludes, _includes), o)
@@ -171,25 +182,15 @@ python do_sca_pyright_core() {
         ## (and keep our fingers crossed that 5 files don't produce more than 128k of output)
         os.environ["PYTHONPATH"] = ":".join([
                                         d.getVar("SCA_SOURCES_DIR"),
-                                        os.path.join(d.getVar("STAGING_DIR"), d.getVar("libdir").lstrip("/"), d.getVar("PYTHON_DIR")),    
+                                        os.path.join(d.getVar("STAGING_DIR"), d.getVar("libdir").lstrip("/"), d.getVar("PYTHON_DIR")),
                                         os.path.join(d.getVar("STAGING_DIR"), d.getVar("PYTHON_SITEPACKAGES_DIR").lstrip("/"))
                                     ])
-        for f in sca_chunckify_input(_files, 5):
-            try:
-                _tmp = subprocess.check_output(_args + f, universal_newlines=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                _tmp = e.stdout or ""
-            if not _tmp.strip().endswith("}"):
-                _tmp = _tmp[:_tmp.rfind("}") + 1]
-            try:
-                if not cmd_output or "diagnostics" not in cmd_output:
-                    cmd_output = json.loads(_tmp)
-                else:
-                    cmd_output["diagnostics"] += json.loads(_tmp)["diagnostics"]
-            except Exception as e:
-                pass
+        cmd_output = exec_wrap_check_output(_args, _files,
+                                            combine=exec_wrap_combine_json_pyright,
+                                            key="diagnostics",
+                                            chunk_size=5)
     with open(sca_raw_result_file(d, "pyright"), "w") as o:
-        json.dump(cmd_output, o)
+        o.write(cmd_output)
 }
 
 python do_sca_pyright_core_report() {
@@ -200,7 +201,7 @@ python do_sca_pyright_core_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "pyright", get_fatal_entries(d, "SCA_PYRIGHT_EXTRA_FATAL", 
+    sca_task_aftermath(d, "pyright", get_fatal_entries(d, "SCA_PYRIGHT_EXTRA_FATAL",
                         d.expand("${STAGING_DATADIR_NATIVE}/pyright-${SCA_MODE}-fatal")))
 }
 

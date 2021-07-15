@@ -22,7 +22,7 @@ def do_sca_conv_alexkohler(d):
     import os
     import re
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -54,33 +54,32 @@ def do_sca_conv_alexkohler(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
+
+def exec_wrap_combine_txt_alexkohler(a, b, **kwargs):
+    b = b.replace("[", "\n[")
+    lines = [x.strip() for x in b.split("\n") if x and not x.startswith("running on package")]
+    lines = ["[{}] {}".format(kwargs["mod"], x) for x in lines]
+    return a + "\n".join(lines) + "\n"
 
 python do_sca_alexkohler() {
     import os
     import subprocess
-    
+
     cmd_output = ""
 
-    _files = get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_ALEXKOHLER_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_ALEXKOHLER_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## Run
+    cmd_output = ""
     if any(_files):
         for mod in clean_split(d, "SCA_ALEXKOHLER_MODULES"):
-            try:
-                tmp_output = subprocess.check_output([mod] + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                tmp_output = e.stdout or ""
-            tmp_output = tmp_output.replace("[", "\n[")
-            lines = [x.strip() for x in tmp_output.split("\n") if x and not x.startswith("running on package")]
-            lines = ["[{}] {}".format(mod, x) for x in lines]
-            cmd_output += "\n".join(lines)
-            cmd_output += "\n"
+            cmd_output += exec_wrap_check_output([mod], _files, combine=exec_wrap_combine_txt_alexkohler, mod=mod)
     with open(sca_raw_result_file(d, "alexkohler"), "w") as o:
         o.write(cmd_output)
 }
@@ -97,17 +96,9 @@ python do_sca_alexkohler_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/alexkohler-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_alexkohler"
-
-python do_sca_deploy_alexkohler() {
-    sca_conv_deploy(d, "alexkohler")
-}
-
 do_sca_alexkohler[doc] = "Lint go files with alex kohler tools"
 do_sca_alexkohler_report[doc] = "Report findings from do_sca_alexkohler"
-do_sca_deploy_alexkohler[doc] = "Deploy results of do_sca_alexkohler"
 addtask do_sca_alexkohler after do_configure before do_sca_tracefiles
-addtask do_sca_alexkohler_report after do_sca_tracefiles
-addtask do_sca_deploy_alexkohler after do_sca_alexkohler_report before do_package
+addtask do_sca_alexkohler_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "alexkohler-native sca-recipe-alexkohler-rules-native"

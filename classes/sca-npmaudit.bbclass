@@ -17,7 +17,7 @@ inherit sca-suppress
 def do_sca_conv_npmaudit(d):
     import os
     import json
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -60,7 +60,7 @@ def do_sca_conv_npmaudit(d):
                 if g.Severity in sca_allowed_warning_level(d):
                     _findings.append(g)
             except Exception as e:
-                bb.warn(str(e))
+                bb.note(str(e))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -71,41 +71,35 @@ python do_sca_npmaudit() {
 
     cmd_output = "{}"
 
+    os.environ["HOME"] = d.getVar("T")
+
     ## Run
-    
+
     if os.path.exists(os.path.join(d.getVar("SCA_SOURCES_DIR"), "package-lock.json")):
         cur_dir = os.getcwd()
         os.chdir(d.getVar("SCA_SOURCES_DIR"))
         _args = ["npm", "audit", "--json"]
-    
+
         try:
             cmd_output = subprocess.check_output(_args, universal_newlines=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             cmd_output = e.stdout or "{}"
         os.chdir(cur_dir)
-    
+
     with open(sca_raw_result_file(d, "npmaudit"), "w") as o:
         o.write(cmd_output)
-    
+
     ## Create data model
     d.setVar("SCA_DATAMODEL_STORAGE", "{}/npmaudit.dm".format(d.getVar("T")))
     dm_output = do_sca_conv_npmaudit(d)
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "npmaudit", get_fatal_entries(d, "SCA_NPMAUDIT_EXTRA_FATAL", 
+    sca_task_aftermath(d, "npmaudit", get_fatal_entries(d, "SCA_NPMAUDIT_EXTRA_FATAL",
                        d.expand("${STAGING_DATADIR_NATIVE}/npmaudit-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_npmaudit"
-
-python do_sca_deploy_npmaudit() {
-    sca_conv_deploy(d, "npmaudit")
-}
-
 do_sca_npmaudit[doc] = "Audit of used NPM packages"
-do_sca_deploy_npmaudit[doc] = "Deploy results of do_sca_npmaudit"
-addtask do_sca_npmaudit before do_install after do_compile
-addtask do_sca_deploy_npmaudit after do_sca_npmaudit before do_package
+addtask do_sca_npmaudit before do_sca_deploy after do_compile
 
 DEPENDS += "npmaudit-sca-native sca-recipe-npmaudit-rules-native"

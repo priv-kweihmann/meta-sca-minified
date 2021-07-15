@@ -94,6 +94,7 @@ SCA_AVAILABLE_MODULES ?= "\
                           jsonlint \
                           kconfighard \
                           looong \
+                          lse \
                           lynis \
                           msgcheck \
                           mypy \
@@ -143,6 +144,5 @@ SCA_ENABLED_MODULES := "${SCA_ENABLED_MODULES_${SCA_MODE_UPPER}}"
 SCA_HASHEXCLUDE_VARS = "\
                         __SCA_DATAMODEL_STORAGE \
                         SCA_DATAMODEL_STORAGE \
-                        SCA_DEPLOY_TASK \
                         SCA_LAYERDIR \
                         "

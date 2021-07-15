@@ -77,7 +77,7 @@ def do_sca_conv_pkgqaenc(d):
     import os
     import re
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("PKGDEST")
 
@@ -109,7 +109,7 @@ def do_sca_conv_pkgqaenc(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -173,28 +173,20 @@ python do_sca_pkgqaenc() {
 
     with open(sca_raw_result_file(d, "pkgqaenc"), "w") as o:
         o.write(cmd_output)
-    
+
     ## Create data model
     d.setVar("SCA_DATAMODEL_STORAGE", "{}/pkgqaenc.dm".format(d.getVar("T")))
     dm_output = do_sca_conv_pkgqaenc(d)
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "pkgqaenc", get_fatal_entries(d, "SCA_PKGQAENC_EXTRA_FATAL", 
+    sca_task_aftermath(d, "pkgqaenc", get_fatal_entries(d, "SCA_PKGQAENC_EXTRA_FATAL",
                         d.expand("${STAGING_DATADIR_NATIVE}/pkgqaenc-${SCA_MODE}-fatal")))
-}
-
-SCA_DEPLOY_TASK = "do_sca_deploy_pkgqaenc"
-
-python do_sca_deploy_pkgqaenc() {
-    sca_conv_deploy(d, "pkgqaenc")
 }
 
 do_sca_pkgqaenc_pre[doc] = "Package linter pre function"
 do_sca_pkgqaenc[doc] = "Lint produced packages"
-do_sca_deploy_pkgqaenc[doc] = "Deploy results of do_sca_pkgqaenc"
 addtask do_sca_pkgqaenc_pre before do_configure after do_patch
-addtask do_sca_pkgqaenc before do_package_qa after do_package
-addtask do_sca_deploy_pkgqaenc after do_sca_pkgqaenc before do_package_qa
+addtask do_sca_pkgqaenc before do_sca_deploy after do_package
 
 DEPENDS += "pkgqaenc-native sca-recipe-pkgqaenc-rules-native"

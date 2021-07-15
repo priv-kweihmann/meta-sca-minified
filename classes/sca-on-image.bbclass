@@ -7,6 +7,7 @@ inherit sca-global
 inherit sca-helper
 inherit sca-file-filter
 inherit sca-blacklist
+inherit sca-deploy-image
 
 SCA_PACKAGE_LICENSE_FILTER = "CLOSED"
 SCA_ENABLED_MODULES_IMAGE ?= "\
@@ -25,6 +26,7 @@ SCA_ENABLED_MODULES_IMAGE ?= "\
                             htmlhint \
                             jshint \
                             jsonlint \
+                            lse \
                             lynis \
                             multimetric \
                             mypy \
@@ -71,7 +73,7 @@ def sca_on_image_init(d):
             enabledModules.append(item)
         except bb.parse.ParseError as exp:
             if d.getVar("SCA_VERBOSE_OUTPUT") != "0":
-                bb.warn(str(exp))
+                bb.note(str(exp))
     if any(enabledModules):
         if d.getVar("SCA_VERBOSE_OUTPUT") == "1":
             bb.note("Using SCA Module(s) {}".format(",".join(sorted(enabledModules))))
@@ -80,10 +82,13 @@ def sca_on_image_init(d):
         if d.getVar("SCA_ENABLE_BESTOF") == "1":
             BBHandler.inherit("sca-{}-image".format("bestof"), "sca-on-recipe", 1, d)
             func = "sca-{}-init".format("bestof").replace("-", "_")
+            enabledModules.append("bestof")
             if d.getVar(func, False) is not None:
                 bb.build.exec_func(func, d, **get_bb_exec_ext_parameter_support(d))
         if d.getVar("SCA_ENABLE_IMAGE_SUMMARY") == "1":
             BBHandler.inherit("sca-{}".format("image-summary"), "sca-on-image", 1, d)
             func = "sca-{}-init".format("image-summary").replace("-", "_")
+            enabledModules.append("image-summary")
             if d.getVar(func, False) is not None:
                 bb.build.exec_func(func, d, **get_bb_exec_ext_parameter_support(d))
+    d.setVar("SCA_ACTIVE_MODULES", " ".join(sorted(enabledModules)))

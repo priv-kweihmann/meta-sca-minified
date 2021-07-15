@@ -17,7 +17,7 @@ inherit sca-suppress
 def do_sca_conv_licensecheck(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
 
     items = []
@@ -48,7 +48,7 @@ def do_sca_conv_licensecheck(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -75,7 +75,7 @@ python do_sca_licensecheck() {
     except subprocess.CalledProcessError as e:
         pass
     os.chdir(_cwd)
-    
+
     cmd_output = ""
     try:
         cmd_output = subprocess.check_output(["nativepython3",
@@ -84,10 +84,10 @@ python do_sca_licensecheck() {
                                              universal_newlines=True, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
         pass
-    
+
     with open(sca_raw_result_file(d, "licensecheck"), "w") as o:
         o.write(cmd_output)
-    
+
     ## Create data model
     d.setVar("SCA_DATAMODEL_STORAGE", "{}/licensecheck.dm".format(d.getVar("T")))
     dm_output = do_sca_conv_licensecheck(d)
@@ -98,15 +98,7 @@ python do_sca_licensecheck() {
                        d.expand("${STAGING_DATADIR_NATIVE}/licensecheck-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_licensecheck"
-
-python do_sca_deploy_licensecheck() {
-    sca_conv_deploy(d, "licensecheck")
-}
-
 do_sca_licensecheck[doc] = "Scan license information in workspace"
-do_sca_deploy_licensecheck[doc] = "Deploy results of do_sca_licensecheck"
-addtask do_sca_licensecheck before do_install after do_compile
-addtask do_sca_deploy_licensecheck after do_sca_licensecheck before do_package
+addtask do_sca_licensecheck before do_sca_deploy after do_compile
 
 DEPENDS += "licensecheck-sca-native sca-recipe-licensecheck-rules-native"

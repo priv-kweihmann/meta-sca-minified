@@ -22,7 +22,7 @@ inherit sca-tracefiles
 def do_sca_conv_splint(d):
     import os
     import csv
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -63,7 +63,7 @@ def do_sca_conv_splint(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -92,13 +92,13 @@ python do_sca_splint() {
         _args += ["-I{}".format(i)]
     _args += ["-I{}".format(d.getVar("SCA_SOURCES_DIR"))]
 
-    _files = get_files_by_extention(d,    
-                                    d.getVar("SCA_SOURCES_DIR"),    
-                                    clean_split(d, "SCA_SPLINT_FILE_FILTER"),    
+    _files = get_files_by_extention(d,
+                                    d.getVar("SCA_SOURCES_DIR"),
+                                    clean_split(d, "SCA_SPLINT_FILE_FILTER"),
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     cmd_output = ["Warning,Flag Code,Flag Name,Priority,File,Line,Column,Warning Text,Additional Text"]
-    
+
     ## Run
     for f in _files:
         _targs = _args + ["+csv", os.path.join(d.getVar("T"), "sca_raw_splint_tmp.csv")]
@@ -129,17 +129,9 @@ python do_sca_splint_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/splint-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_splint"
-
-python do_sca_deploy_splint() {
-    sca_conv_deploy(d, "splint")
-}
-
 do_sca_splint[doc] = "Lint C files with splint"
 do_sca_splint_report[doc] = "Report findings of do_sca_splint"
-do_sca_deploy_splint[doc] = "Deploy results of do_sca_splint"
 addtask do_sca_splint after do_compile before do_sca_tracefiles
-addtask do_sca_splint_report after do_sca_tracefiles
-addtask do_sca_deploy_splint after do_sca_splint_report before do_package
+addtask do_sca_splint_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "splint-native sca-recipe-splint-rules-native"

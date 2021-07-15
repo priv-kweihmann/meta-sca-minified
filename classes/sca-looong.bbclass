@@ -20,7 +20,7 @@ inherit python3-dir
 def do_sca_conv_looong(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -57,7 +57,7 @@ def do_sca_conv_looong(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -92,21 +92,13 @@ python do_sca_looong_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "looong", get_fatal_entries(d, "SCA_LOOONG_EXTRA_FATAL", 
+    sca_task_aftermath(d, "looong", get_fatal_entries(d, "SCA_LOOONG_EXTRA_FATAL",
                         d.expand("${STAGING_DATADIR_NATIVE}/looong-${SCA_MODE}-fatal")))
-}
-
-SCA_DEPLOY_TASK = "do_sca_deploy_looong"
-
-python do_sca_deploy_looong() {
-    sca_conv_deploy(d, "looong")
 }
 
 do_sca_looong[doc] = "Find python function to be refactored"
 do_sca_looong_report[doc] = "Report findings of do_sca_looong"
-do_sca_deploy_looong[doc] = "Deploy results of do_sca_looong"
 addtask do_sca_looong after do_compile before do_sca_tracefiles
-addtask do_sca_looong_report after do_sca_tracefiles
-addtask do_sca_deploy_looong after do_sca_looong_report before do_package
+addtask do_sca_looong_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "python3-looong-native sca-recipe-looong-rules-native"
