@@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/apotonick/declarative-option"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a6bdd96db3845e32cb1f0234df032a60"
 
-DEPENDS = ""
+DEPENDS += ""
 RDEPENDS_${PN} += ""
 
 SRC_URI[md5sum] = "da8363773bbe1dc01ab3fc308aa32423"

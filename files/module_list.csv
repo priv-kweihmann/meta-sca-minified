@@ -8,6 +8,7 @@ bashate,Shell script linter,http://docs.openstack.org/developer/bashate/,,,x,x,,
 bitbake,Bitbake issue handling,,,,x,x,,,,,,,,,,,,,x,,,x,x
 cbmc,C Bounded Model Checker,https://github.com/diffblue/cbmc/,,x,,x,x,,,,,,,,,,,,,,,x,
 checkbashisms,Shell script linter,https://manpages.debian.org/jessie/devscripts/checkbashisms.1.en.html,,,x,x,,,,x,,,,,,,,,,,,x,x
+checksec,check on security issues,https://github.com/slimm609/checksec.sh,,,x,,,,,,,,,x,,,,,,,x,,
 clang,C/C++ linter using LLVM,https://clang.llvm.org/extra/clang-tidy/,"meta-clang, manual enable",,,,x,x,x,,,,,,,,,,,,,,x
 configcheck,Check application configurations,,,,x,,,,,,,,,,,,,,,x,,x,
 cppcheck,C/C++ linter,https://github.com/danmar/cppcheck,,,,x,x,x,,,,,,,,,,,,,x,x,x
@@ -23,7 +24,9 @@ flawfinder,C/C++ security linter,https://github.com/david-a-wheeler/flawfinder,,
 flint,C/C++ linter,https://github.com/JossWhittle/FlintPlusPlus,,,,x,x,x,,,,,,,,,,,,,,x,
 gcc,GCC compiler issues and hardening,,,,,x,x,x,,,,,,,,,,,,,x,x,
 gixy,NGINX config security linter,https://github.com/yandex/gixy,,,x,,,,,,,,,,,,,,,x,x,,
+goconsistent,Source code analyzer that helps you to make your Go programs more consistent,https://github.com/quasilyte/go-consistent,,,,x,,,,,,,x,,,,,,,,,,x
 goconst,Find variables that could be constants in GO files,https://github.com/jgautheron/goconst,,,,x,,,,,,,x,,,,,,,,,,x
+golicensecheck,Scan code for license information,https://github.com/go-enry/go-license-detector,,,,x,,,,,,,,,,,,,,x,x,,
 golint,GO linter,https://github.com/golang/lint,,,,x,,,,,,,x,,,,,,,,,,x
 gosec,GO security linter,https://github.com/securego/gosec,,,,x,,,,,,,x,,,,,,,,x,,
 htmlhint,HTML linter,https://github.com/htmlhint/HTMLHint,,x,x,x,,,,,,,,,,,,,,x,,x,
@@ -32,7 +35,7 @@ inspec,framework for end-to-end infrastructure tests,https://github.com/inspec/i
 jshint,Javascript linter,https://github.com/jshint/jshint,,x,x,x,,,,,x,,,,,,,,,,,x,x
 jsonlint,JSON file linter,,,,x,x,,,,,,,,,,,,,,x,,x,
 kconfighard,Kernel config hardening checker,https://github.com/a13xp0p0v/kconfig-hardened-check,,,,x,,,,,,,,,,,,,,x,x,,
-licensecheck,Scan code for license information,https://github.com/boyter/lc,,,,x,,,,,,,,,,,,,,x,x,,,
+licensecheck,Scan code for license information,https://github.com/boyter/lc,,,,x,,,,,,,,,,,,,,x,x,,
 looong,Find functions with too long arglists,https://github.com/anapaulagomes/looong,,,,x,,,x,,,,,,,,,,,,,,x
 lse,check on security issues,https://github.com/diego-treitos/linux-smart-enumeration,,,x,,,,,,,,,x,,,,,,,x,,
 luacheck,LUA linter,https://github.com/mpeterv/luacheck,"meta-oe, manual enable",x,,x,,,,,,,,,x,,,,,,,x,
@@ -47,13 +50,14 @@ perl,Perl warnings check,,,,,x,,,,,,,,,,,,,,x,,x,
 perlcritic,Perl linter,https://metacpan.org/pod/perlcritic,,,,x,,,,,,,,,,,,,,x,,x,
 phan,PHP linter,https://github.com/phan/phan,"meta-oe, manual enable",x,,x,,,,,,x,,,,,,,,,,,x
 phpcodefixer,Find deprecated PHP functions,https://github.com/wapmorgan/PhpCodeFixer,"meta-oe, manual enable",x,,x,,,,,,x,,,,,,,,,,x,
-phpcodesniffer,PHP, Js and CSS linter,https://github.com/squizlabs/PHP_CodeSniffer,"meta-oe, manual enable",x,,x,,,,,,x,,,,,,,,,,,x
+phpcodesniffer,PHP," Js and CSS linter",https://github.com/squizlabs/PHP_CodeSniffer,"meta-oe, manual enable",x,,x,,,,,,x,,,,,,,,,,
 phpmd,PHP Linter,https://github.com/phpmd/phpmd,"meta-oe, manual enable",x,,x,,,,,,x,,,,,,,,,,x,x
 phpsecaudit,Find vulnerabilities in PHP code,https://github.com/FloeDesignTechnologies/phpcs-security-audit,"meta-oe, manual enable",x,,x,,,,,,x,,,,,,,,,x,,
 phpstan,PHP linter,https://github.com/phpstan/phpstan,"meta-oe, manual enable",x,,x,,,,,,x,,,,,,,,,,,x
-pkgqaenc,Enhanced packge QA,,,,,x,,,,,,,,,,,,,x,,x,,,
+pkgqaenc,Enhanced packge QA,,,,,x,,,,,,,,,,,,,x,,x,,
 progpilot,PHP linter with security focus,https://github.com/designsecurity/progpilot,"meta-oe, manual enable",x,,x,,,,,,x,,,,,,,,,,x,
 proselint,Spelling and text linter,https://github.com/amperser/proselint/,,,x,x,,,,,,,,,,x,,,,,,,x
+protolint,Lint protobuf files,https://github.com/yoheimuta/protolint,,,,x,,,,,,,,,,x,,,,x,,,x
 pscan,Find insecure printfs,http://deployingradius.com/pscan/,,,,x,x,,,,,,,,,,,,,,,x,
 pyfindinjection,Find SQL injections in python code,https://github.com/uber/py-find-injection,,,x,x,,,x,,,,,,,,,,,,x,,
 pylint,Python linter,https://github.com/PyCQA/pylint,,,x,x,,,x,,,,,,,,,,,,,x,x
@@ -64,12 +68,13 @@ rats,Check on insecurities in several languages,https://github.com/redNixon/rats
 reconbf,security audit tool,https://github.com/HewlettPackard/reconbf,,,x,,,,,,,,,x,,,,,,,x,,
 reek,Code smell detector for Ruby,https://github.com/troessner/reek,,,,x,,,,,,,,,,,,,,x,,,x
 retire,Check for known vulnerabilities in javascript and NPM,https://retirejs.github.io/retire.js/,,x,,x,,,,,x,,,,,,,,x,,x,,
-reuse,Scan code for license information,https://github.com/fsfe/reuse-tool,,,,x,,,,,,,,,,,,,,x,x,,,
+reuse,Scan code for license information,https://github.com/fsfe/reuse-tool,,,,x,,,,,,,,,,,,,,x,x,,
 revive,GO linter,https://github.com/mgechev/revive,,,,x,,,,,,,x,,,,,,,,,x,x
 ropgadget,Determine ROP exploitability in binaries,https://github.com/JonathanSalwan/ROPgadget,manual enable,,,x,,,,,,,,,,,,x,,,x,,
-rubycritic,Ruby linter,https://github.com/whitesmith/rubycritic/,,,,x,,,,,,,,,,,,,,x,,,x,
+rubycritic,Ruby linter,https://github.com/whitesmith/rubycritic/,,,,x,,,,,,,,,,,,,,x,,,x
 safety,Check for known vulnerabilities in python-packages,https://github.com/pyupio/safety,,,,x,,,x,,,,,,,,,,x,,x,,
-scancode,Scan code for license information,https://github.com/nexB/scancode-toolkit,,,,x,,,,,,,,,,,,,,x,x,,,
+scancode,Scan code for license information,https://github.com/nexB/scancode-toolkit,,,,x,,,,,,,,,,,,,,x,x,,
+semgrep,Pattern based linting for many formats and languages,https://github.com/returntocorp/semgrep,"only avaiable for x86-64 hosts",,,x,x,x,x,,x,x,x,,,,,,,x,,x,
 setuptoolslint,Lint python-setup.py,https://github.com/johnnoone/setuptools-pylint,,,,x,,,x,,,,,,,,,,,,,x,
 shellcheck,Shell script linter,https://github.com/koalaman/shellcheck,,,x,x,,,,x,,,,,,,,,,,,x,x
 slick,Shell script linter,https://github.com/mcandre/slick,,,x,x,,,,x,,,,,,,,,,,,x,

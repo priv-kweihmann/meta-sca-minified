@@ -125,6 +125,22 @@ def get_files_by_mimetype(d, path, mime, excludes=[]):
     except ImportError:
         return []
 
+def get_folders(d, path, excludes=[]):
+    import os
+    res = []
+    local_dirs = clean_split(d, "SCA_LOCAL_FILE_FILTER")
+    for root, dirs, files in os.walk(path, topdown=True):
+        for item in dirs:
+            _filepath = os.path.join(root, item)
+            if not os.path.isdir(_filepath):
+                continue
+            if any([_filepath.startswith(x) for x in local_dirs]):
+                continue
+            if _filepath in excludes:
+                continue
+            res.append(_filepath)
+    return [x for x in res if os.path.isdir(x)]
+
 def get_files_by_glob(d, basedir, pattern, excludes=[]):
     import os
     import glob
@@ -297,3 +313,14 @@ def sca_regex_safe_string(value):
 
 def sca_regex_safe(d, var):
     return sca_regex_safe_string(d.getVar(var) or "")
+
+def sca_module_applicable(d, module):
+    _layers = clean_split(d, "BBFILE_COLLECTIONS")
+    if module in d.getVarFlags("SCA_AVAILABLE_MODULES"):
+        missing_req = set()
+        for req in [x for x in d.getVarFlag("SCA_AVAILABLE_MODULES", module).split(" ") if x]:
+            if req not in _layers:
+                missing_req.add(req)
+        if missing_req:
+            bb.fatal("SCA module {} requires {} layer(s) to be present".format(module, ','.join(missing_req)))
+    return True
