@@ -94,9 +94,9 @@ SCA_AVAILABLE_MODULES ?= "\
                           flint \
                           gcc \
                           gixy \
+                          goconst \
                           golint \
                           gosec \
-                          govet \
                           htmlhint \
                           jshint \
                           jsonlint \
@@ -130,7 +130,6 @@ SCA_AVAILABLE_MODULES ?= "\
                           shellcheck \
                           slick \
                           sparse \
-                          splint \
                           standard \
                           stank \
                           stylelint \

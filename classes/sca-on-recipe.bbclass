@@ -30,9 +30,9 @@ SCA_ENABLED_MODULES_RECIPE ?= "\
                             flawfinder \
                             flint \
                             gcc \
+                            goconst \
                             golint \
                             gosec \
-                            govet \
                             htmlhint \
                             jshint \
                             jsonlint \
@@ -73,10 +73,10 @@ SCA_ENABLED_MODULES_RECIPE ?= "\
                             shellcheck \
                             slick \
                             sparse \
-                            splint \
                             standard \
                             stank \
                             stylelint \
+                            systemdlint \
                             textlint \
                             tlv \
                             tscancode \
