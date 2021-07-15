@@ -12,7 +12,6 @@ inherit sca-suppress
 
 def do_sca_conv_shellcheck(d):
     import os
-    import re
     from xml.etree.ElementTree import Element, SubElement, Comment, tostring
     from xml.etree import ElementTree
     
@@ -76,8 +75,6 @@ python do_sca_shellcheck_core() {
                 cmd_output = subprocess.check_output(_t_args, universal_newlines=True)
             except subprocess.CalledProcessError as e:
                 cmd_output = e.stdout or ""
-                if e.stderr:
-                    bb.warn(str(e.stderr))
             xml_output = xml_combine(d, xml_output, cmd_output)
     with open(sca_raw_result_file(d, "shellcheck"), "w") as o:
         o.write(xml_output)
