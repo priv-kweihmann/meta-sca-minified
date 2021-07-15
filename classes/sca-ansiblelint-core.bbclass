@@ -19,7 +19,7 @@ SCA_RAW_RESULT_FILE[ansiblelint] = "txt"
 def do_sca_conv_ansiblelint(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -30,7 +30,7 @@ def do_sca_conv_ansiblelint(d):
         "W" : "warning",
     }
 
-    _suppress = sca_suppress_init(d, "SCA_ANSIBLELINT_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_ANSIBLELINT_EXTRA_SUPPRESS",
                                   d.expand("${STAGING_DATADIR_NATIVE}/ansiblelint-${SCA_MODE}-suppress"))
     _excludes = sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA"))
 
@@ -59,7 +59,7 @@ def do_sca_conv_ansiblelint(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         sca_add_model_class(d, g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     return sca_save_model_to_string(d)
 
@@ -71,16 +71,11 @@ python do_sca_ansiblelint_core() {
     _args = [os.path.join(d.getVar("STAGING_BINDIR_NATIVE"), "python3-native", "python3")]
     _args += ["-m", "ansiblelint"]
     _args += ["-p"]
+    _args += ["--nocolor"]
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_ANSIBLELINT_FILE_FILTER"),
                         sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
-    cmd_output = ""
-    if any(_files):
-        _args += _files
-        try:
-            cmd_output = subprocess.check_output(_args, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files)
 
     with open(sca_raw_result_file(d, "ansiblelint"), "w") as o:
         o.write(cmd_output)
@@ -95,6 +90,6 @@ python do_sca_ansiblelint_core_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "ansiblelint", get_fatal_entries(d, "SCA_ANSIBLELINT_EXTRA_FATAL", 
+    sca_task_aftermath(d, "ansiblelint", get_fatal_entries(d, "SCA_ANSIBLELINT_EXTRA_FATAL",
                        d.expand("${STAGING_DATADIR_NATIVE}/ansiblelint-${SCA_MODE}-fatal")))
 }

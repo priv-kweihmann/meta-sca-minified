@@ -23,7 +23,7 @@ inherit python3native
 def do_sca_conv_setuptoolslint(d, cmd_output=""):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -54,7 +54,7 @@ def do_sca_conv_setuptoolslint(d, cmd_output=""):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as e:
-                    bb.warn(str(e))
+                    bb.note(str(e))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -71,11 +71,11 @@ python do_sca_setuptoolslint() {
     _args = [d.getVar("PYTHON")]
 
     cmd_output = ""
-    
+
     for f in clean_split(d, "SCA_SETUPTOOLSLINT_FILES"):
         if os.path.exists(f):
             try:
-                # Lint using a fake package, as we only need to first stage of    
+                # Lint using a fake package, as we only need to first stage of
                 # linting, as pylint is already run by a different module
                 tmp_output = subprocess.check_output(_args + [f, "lint", "--lint-packages=2107066c996809c8e5cec0a3ce1b10cfe4ab1fbf"], universal_newlines=True, stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as e:
@@ -85,7 +85,7 @@ python do_sca_setuptoolslint() {
 
     with open(sca_raw_result_file(d, "setuptoolslint"), "w") as o:
         o.write(cmd_output)
-    
+
     ## Create data model
     d.setVar("SCA_DATAMODEL_STORAGE", "{}/setuptoolslint.dm".format(d.getVar("T")))
     dm_output = do_sca_conv_setuptoolslint(d)
@@ -96,16 +96,8 @@ python do_sca_setuptoolslint() {
                        d.expand("${STAGING_DATADIR_NATIVE}/setuptoolslint-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_setuptoolslint"
-
-python do_sca_deploy_setuptoolslint() {
-    sca_conv_deploy(d, "setuptoolslint")
-}
-
 do_sca_setuptoolslint[doc] = "Lint python library installation"
-do_sca_deploy_setuptoolslint[doc] = "Deploy results of do_sca_setuptoolslint"
-addtask do_sca_setuptoolslint before do_install after do_compile
-addtask do_sca_deploy_setuptoolslint after do_sca_setuptoolslint before do_package
+addtask do_sca_setuptoolslint before do_sca_deploy after do_compile
 
 DEPENDS += "\
             python3-setuptools-lint-native \

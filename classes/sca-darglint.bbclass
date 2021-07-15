@@ -20,7 +20,7 @@ inherit python3native
 def do_sca_conv_darglint(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -49,7 +49,7 @@ def do_sca_conv_darglint(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -63,19 +63,15 @@ python do_sca_darglint() {
     ## Run
     _paths = [os.path.join(d.getVar("STAGING_DIR"), d.getVar("PYTHON_SITEPACKAGES_DIR").lstrip("/")),
               d.getVar("SCA_SOURCES_DIR"),
-              os.environ.get("PYTHONPATH", "")    
+              os.environ.get("PYTHONPATH", "")
               ]
     _args = ["darglint"]
     _args += ["--no-exit-code"]
-    
+
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_PYTHON_SHEBANG"), [".py"], \
                                                 sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
-    
-    if any(_files):    
-        try:
-            cmd_output += subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
+
+    cmd_output = exec_wrap_check_output(_args, _files)
 
     with open(sca_raw_result_file(d, "darglint"), "w") as o:
         o.write(cmd_output)
@@ -93,17 +89,9 @@ python do_sca_darglint_report() {
                         d.expand("${STAGING_DATADIR_NATIVE}/darglint-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_darglint"
-
-python do_sca_deploy_darglint() {
-    sca_conv_deploy(d, "darglint")
-}
-
 do_sca_darglint[doc] = "Lint python docstrings"
 do_sca_darglint_report[doc] = "Report findings of do_sca_darglint"
-do_sca_deploy_darglint[doc] = "Deploy results of do_sca_darglint"
-addtask do_sca_darglint after do_configure before do_sca_tracefiles 
-addtask do_sca_darglint_report after do_sca_tracefiles
-addtask do_sca_deploy_darglint after do_sca_darglint_report before do_package
+addtask do_sca_darglint after do_configure before do_sca_tracefiles
+addtask do_sca_darglint_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "python3-darglint-native sca-recipe-darglint-rules-native"

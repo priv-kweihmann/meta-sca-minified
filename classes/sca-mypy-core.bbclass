@@ -14,7 +14,7 @@ def do_sca_conv_mypy(d):
     import os
     import re
     import hashlib
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -50,7 +50,7 @@ def do_sca_conv_mypy(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -69,13 +69,8 @@ python do_sca_mypy_core() {
                 sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
     ## Run
-    cmd_output = ""
+    cmd_output = exec_wrap_check_output(_args, _files)
 
-    if any(_files):
-        try:
-            cmd_output = subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output = e.stdout or ""
     with open(sca_raw_result_file(d, "mypy"), "w") as o:
         o.write(cmd_output)
 }
@@ -89,7 +84,7 @@ python do_sca_mypy_core_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "mypy", get_fatal_entries(d, "SCA_MYPY_EXTRA_FATAL", 
+    sca_task_aftermath(d, "mypy", get_fatal_entries(d, "SCA_MYPY_EXTRA_FATAL",
                        d.expand("${STAGING_DATADIR_NATIVE}/mypy-${SCA_MODE}-fatal")))
 }
 

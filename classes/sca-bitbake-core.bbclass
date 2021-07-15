@@ -75,7 +75,7 @@ def do_sca_bitbake_hardening(d):
 def do_sca_conv_bitbake(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -112,7 +112,7 @@ def do_sca_conv_bitbake(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -133,12 +133,6 @@ python do_sca_bitbake () {
         o.write(dm_output)
 
     sca_task_aftermath(d, "bitbake", get_fatal_entries(d, "", None))
-}
-
-SCA_DEPLOY_TASK = "do_sca_deploy_gcc"
-
-python do_sca_deploy_bitbake() {
-    sca_conv_deploy(d, "bitbake")
 }
 
 DEPENDS += "bitbake-sca-native"

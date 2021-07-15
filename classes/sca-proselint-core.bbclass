@@ -27,7 +27,7 @@ def do_sca_conv_proselint(d):
 
     items = []
 
-    _suppress = sca_suppress_init(d, "SCA_PROSELINT_EXTRA_SUPPRESS", 
+    _suppress = sca_suppress_init(d, "SCA_PROSELINT_EXTRA_SUPPRESS",
                                     d.expand("${STAGING_DATADIR_NATIVE}/proselint-${SCA_MODE}-suppress"))
     _findings = []
 
@@ -59,7 +59,7 @@ def do_sca_conv_proselint(d):
                         if g.Severity in sca_allowed_warning_level(d):
                             _findings.append(g)
                     except Exception as exp:
-                        bb.warn(str(exp))
+                        bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -94,8 +94,8 @@ python do_sca_proselint_core() {
             x = json.loads(cmd_output)
             json_output[_f] = x
         except Exception as e:
-            bb.warn(cmd_output)
-            bb.warn(str(e))
+            bb.note(cmd_output)
+            bb.note(str(e))
 
     try:
         _ = subprocess.check_output(["proselint", "--clean"], universal_newlines=True)
@@ -114,6 +114,6 @@ python do_sca_proselint_core_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "proselint", get_fatal_entries(d, "SCA_PROSELINT_EXTRA_FATAL", 
+    sca_task_aftermath(d, "proselint", get_fatal_entries(d, "SCA_PROSELINT_EXTRA_FATAL",
                         d.expand("${STAGING_DATADIR_NATIVE}/proselint-${SCA_MODE}-fatal")))
 }

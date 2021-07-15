@@ -19,7 +19,7 @@ DEPENDS += "tiger tiger-native"
 def do_sca_conv_tiger(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -56,7 +56,7 @@ def do_sca_conv_tiger(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -78,19 +78,11 @@ fakeroot python do_sca_tiger() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "tiger", get_fatal_entries(d, "SCA_TIGER_EXTRA_FATAL", 
+    sca_task_aftermath(d, "tiger", get_fatal_entries(d, "SCA_TIGER_EXTRA_FATAL",
                        d.expand("${STAGING_DATADIR_NATIVE}/tiger-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_tiger_image"
-
-python do_sca_deploy_tiger_image() {
-    sca_conv_deploy(d, "tiger")
-}
-
 do_sca_tiger[doc] = "Run audit with tiger on image"
-do_sca_deploy_tiger_image[doc] = "Deploy results of do_sca_tiger"
-addtask do_sca_tiger before do_image_complete after do_image
-addtask do_sca_deploy_tiger_image before do_image_complete after do_sca_tiger
+addtask do_sca_tiger before do_sca_deploy after do_image
 
 DEPENDS += "sca-image-tiger-rules-native"

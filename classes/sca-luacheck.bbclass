@@ -18,7 +18,7 @@ inherit sca-tracefiles
 def do_sca_conv_luacheck(d):
     import os
     import re
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -56,7 +56,7 @@ def do_sca_conv_luacheck(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
+                    bb.note(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -71,12 +71,8 @@ python do_sca_luacheck() {
     _files = get_files_by_extention_or_shebang(d, d.getVar("SCA_SOURCES_DIR"), ".*/lua", ".lua",
                                                sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
     ## Run
-    cmd_output = ""
-    if any(_files):
-        try:
-            cmd_output += subprocess.check_output(_args + _files, universal_newlines=True)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files)
+
     with open(sca_raw_result_file(d, "luacheck"), "w") as o:
         o.write(cmd_output)
 }
@@ -89,21 +85,13 @@ python do_sca_luacheck_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "luacheck", get_fatal_entries(d, "SCA_LUACHECK_EXTRA_FATAL", 
+    sca_task_aftermath(d, "luacheck", get_fatal_entries(d, "SCA_LUACHECK_EXTRA_FATAL",
                        d.expand("${STAGING_DATADIR_NATIVE}/luacheck-${SCA_MODE}-fatal")))
-}
-
-SCA_DEPLOY_TASK = "do_sca_deploy_luacheck"
-
-python do_sca_deploy_luacheck() {
-    sca_conv_deploy(d, "luacheck")
 }
 
 do_sca_luacheck[doc] = "Lint lua files"
 do_sca_luacheck_report[doc] = "Report findings of do_sca_luacheck"
-do_sca_deploy_luacheck[doc] = "Deploy results of do_sca_luacheck"
 addtask do_sca_luacheck after do_compile before do_sca_tracefiles
-addtask do_sca_luacheck_report after do_sca_tracefiles
-addtask do_sca_deploy_luacheck after do_sca_luacheck_report before do_package
+addtask do_sca_luacheck_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "luacheck-native sca-recipe-luacheck-rules-native"

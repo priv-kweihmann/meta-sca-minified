@@ -55,7 +55,7 @@ def write_config(_base, _extra_dicts, _target):
 def do_sca_conv_textlint(d):
     import os
     import json
-    
+
     package_name = d.getVar("PN")
     buildpath = d.getVar("SCA_SOURCES_DIR")
 
@@ -100,8 +100,8 @@ def do_sca_conv_textlint(d):
                     if g.Severity in sca_allowed_warning_level(d):
                         _findings.append(g)
                 except Exception as exp:
-                    bb.warn(str(exp))
-    
+                    bb.note(str(exp))
+
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
@@ -133,12 +133,7 @@ python do_sca_textlint() {
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), ".txt .md .html",
                                 sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
 
-    cmd_output = ""
-    if any(_files):
-        try:
-            cmd_output += subprocess.check_output(_args + _files, universal_newlines=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            cmd_output += e.stdout or ""
+    cmd_output = exec_wrap_check_output(_args, _files, combine=exec_wrap_combine_json, default_val={})
     with open(sca_raw_result_file(d, "textlint"), "w") as o:
         o.write(cmd_output)
 }
@@ -155,17 +150,9 @@ python do_sca_textlint_report() {
                        d.expand("${STAGING_DATADIR_NATIVE}/textlint-${SCA_MODE}-fatal")))
 }
 
-SCA_DEPLOY_TASK = "do_sca_deploy_textlint"
-
-python do_sca_deploy_textlint() {
-    sca_conv_deploy(d, "textlint")
-}
-
 do_sca_textlint[doc] = "Lint text files with textlint"
 do_sca_textlint_report[doc] = "Report findings of do_sca_textlint"
-do_sca_deploy_textlint[doc] = "Deploy results of do_sca_textlint"
 addtask do_sca_textlint after do_compile before do_sca_tracefiles
-addtask do_sca_textlint_report after do_sca_tracefiles
-addtask do_sca_deploy_textlint after do_sca_textlint_report before do_package
+addtask do_sca_textlint_report after do_sca_tracefiles before do_sca_deploy
 
 DEPENDS += "textlint-native sca-recipe-textlint-rules-native"
