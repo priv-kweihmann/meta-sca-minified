@@ -48,7 +48,7 @@ def do_sca_conv_ansibleroles(d):
                 try:
                     _dict = json.loads(m.group("msg"))
                     _msg = ""
-                    for _id in ["path", "src", "dest"]:
+                    for _id in ["dest"]:
                         if _id in _dict.keys():
                             # ignore the ansible related issues by default
                             if "/home/root/.ansible" not in _dict[_id] and \
@@ -71,7 +71,7 @@ def do_sca_conv_ansibleroles(d):
                         if g.Severity in sca_allowed_warning_level(d):
                             _findings.append(g)
                 except Exception as exp:
-                    bb.note(str(exp))
+                    bb.warn(str(exp))
 
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
@@ -146,5 +146,6 @@ fakeroot python do_sca_ansibleroles() {
         sca_task_aftermath(d, "ansibleroles", get_fatal_entries(d, "SCA_ANSIBLEROLES_EXTRA_FATAL", None))
 }
 
+do_sca_ansibleroles[lockfiles] += "${WORKDIR}/crossemu.lock"
 do_sca_ansibleroles[doc] = "Audit image with ansible roles"
 addtask do_sca_ansibleroles before do_sca_deploy after do_image
