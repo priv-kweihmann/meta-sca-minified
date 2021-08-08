@@ -63,10 +63,7 @@ SCA_PKGQAENC_BLACKLIST_FILES-dev ?= "\
                                     application/x-pie-executable \
                                     "
 
-SCA_PKGQAENC_SOURCECHECKSUM ?= "${T}/sca_seen_sources.txt"
 SCA_PKGQAENC_NO_COPY_NO_CHECK_CLASSES ?= "bin_package"
-
-
 
 SCA_RAW_RESULT_FILE[pkgqaenc] = "txt"
 
@@ -122,11 +119,6 @@ def do_sca_conv_pkgqaenc(d):
     sca_add_model_class_list(d, _findings)
     return sca_save_model_to_string(d)
 
-do_sca_pkgqaenc_pre() {
-    echo "" > ${SCA_PKGQAENC_SOURCECHECKSUM}
-    find ${S} -type f -exec md5sum {} >> ${SCA_PKGQAENC_SOURCECHECKSUM} \;
-}
-
 def do_sca_pkgqaenc_core(d, package):
     import os
     import subprocess
@@ -150,7 +142,7 @@ def do_sca_pkgqaenc_core(d, package):
         "blacklistFiles": [],
         "nocopyCheck": [],
         "execCheck": [],
-        "sourceChecksum": d.expand("${SCA_PKGQAENC_SOURCECHECKSUM}")
+        "sourceChecksum": d.expand("${SCA_SOURCECHECKSUM}")
     }
     for k, v in (d.getVarFlags("SCA_PKGQAENC_PERM_MAX_MASK{}".format(_suffix)) or {}).items():
         if "maxMask" not in conf:
@@ -177,13 +169,15 @@ def do_sca_pkgqaenc_core(d, package):
     except subprocess.CalledProcessError as e:
         return e.stdout or ""
 
+def do_sca_pkgqaenc_pkg_process(p, d):
+    cmd_output = do_sca_pkgqaenc_core(d, p)
+    cmd_output += do_sca_pkgqaenc_shelllist(d, p)
+    cmd_output += do_sca_pkgqaenc_pythonident(d, p)
+    return cmd_output
+
 python do_sca_pkgqaenc() {
-    cmd_output = ""
-    
-    for p in clean_split(d, "PACKAGES"):
-        cmd_output += do_sca_pkgqaenc_core(d, p)
-        cmd_output += do_sca_pkgqaenc_shelllist(d, p)
-        cmd_output += do_sca_pkgqaenc_pythonident(d, p)
+    results = oe.utils.multiprocess_launch(do_sca_pkgqaenc_pkg_process, clean_split(d, "PACKAGES"), d, extraargs=(d,))
+    cmd_output = "\n".join(results)
     cmd_output += do_sca_pkgqaenc_hashdog(d)
 
     with open(sca_raw_result_file(d, "pkgqaenc"), "w") as o:
@@ -199,11 +193,9 @@ python do_sca_pkgqaenc() {
                         d.expand("${STAGING_DATADIR_NATIVE}/pkgqaenc-${SCA_MODE}-fatal")))
 }
 
-do_sca_pkgqaenc_pre[doc] = "Package linter pre function"
-do_sca_pkgqaenc_pre[dirs] = "${S}"
+
 do_sca_pkgqaenc[doc] = "Lint produced packages"
 do_sca_pkgqaenc[depends] += "python3-native:do_populate_sysroot ${PN}:do_prepare_recipe_sysroot"
-addtask do_sca_pkgqaenc_pre before do_configure after do_patch
 addtask do_sca_pkgqaenc before do_sca_deploy after do_package
 
 DEPENDS += "pkgqaenc-native sca-recipe-pkgqaenc-rules-native python3-native"
