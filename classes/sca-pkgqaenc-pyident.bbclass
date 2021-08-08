@@ -96,7 +96,7 @@ def do_sca_pkgqaenc_pythonident(d, package):
     if not any(_imports):
         return ""
 
-    _pkg_in_rdepends = clean_split(d, "RDEPENDS_{}".format(package))
+    _pkg_in_rdepends = clean_split(d, "RDEPENDS:{}".format(package))
 
     res = ""
 
@@ -139,11 +139,11 @@ def do_sca_pkgqaenc_pythonident(d, package):
                         prov_string = "one of {}".format(",".join(sorted(third_party_packages)))
                     else:
                         prov_string = ",".join(third_party_packages)
-                    res += do_sca_pkgqaenc_warning("pkgqaenc.pkgqaenc.missingprodiver", d.getVar("FILE"), 
-                                                    "Package {pkg} uses {imp}, that requires {prov} set in RDEPENDS_{pkg}".format(
+                    res += do_sca_pkgqaenc_warning("pkgqaenc.pkgqaenc.missingprodiver", _package_dir,
+                                                    "Package {pkg} uses {imp}, that requires {prov} set in RDEPENDS:{pkg}".format(
                                                         imp=_imp, pkg=package, prov=prov_string))
                 else:
-                    res += do_sca_pkgqaenc_warning("pkgqaenc.pkgqaenc.missingprodiver", d.getVar("FILE"), 
+                    res += do_sca_pkgqaenc_warning("pkgqaenc.pkgqaenc.missingprodiver", _package_dir,
                                                     "Package {pkg} uses {imp}, but no provider for this file can be found".format(
                                                         imp=_imp, pkg=package))
     return res
