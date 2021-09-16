@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/yoheimuta/protolint/@v/v0.32.0.zip;srcoutput=github.com/yoheimuta/protolint;srcinput=github.com/yoheimuta/protolint@v0.32.0;downloadfilename=github-com-yoheimuta-protolint-0.32.0.zip;name=github-com-yoheimuta-protolint"
-SRC_URI[github-com-yoheimuta-protolint.sha256sum] = "e35bfb1a586a2961a15ffca0ce25f6108efdc350d1fd76f39bd0a87761174a30"
+SRC_URI += "https://proxy.golang.org/github.com/yoheimuta/protolint/@v/v0.34.0.zip;srcoutput=github.com/yoheimuta/protolint;srcinput=github.com/yoheimuta/protolint@v0.34.0;downloadfilename=github-com-yoheimuta-protolint-0.34.0.zip;name=github-com-yoheimuta-protolint"
+SRC_URI[github-com-yoheimuta-protolint.sha256sum] = "5c4363d726532c85f857182f0a23dc4844b57c56855a63197b07198bcc308377"
 
 GOSRC_LICENSE += "\
     MIT \
