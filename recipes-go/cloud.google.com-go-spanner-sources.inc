@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/cloud.google.com/go/spanner/@v/v1.24.0.zip;srcoutput=cloud.google.com/go/spanner;srcinput=cloud.google.com/go/spanner@v1.24.0;downloadfilename=cloud-google-com-go-spanner-1.24.0.zip;name=cloud-google-com-go-spanner"
-SRC_URI[cloud-google-com-go-spanner.sha256sum] = "1b994869e63fc181572a69d486fb9fc1bbc64c4ad00925157ccf9d8573de8b97"
+SRC_URI += "https://proxy.golang.org/cloud.google.com/go/spanner/@v/v1.25.0.zip;srcoutput=cloud.google.com/go/spanner;srcinput=cloud.google.com/go/spanner@v1.25.0;downloadfilename=cloud-google-com-go-spanner-1.25.0.zip;name=cloud-google-com-go-spanner"
+SRC_URI[cloud-google-com-go-spanner.sha256sum] = "994cdb3b06e89af39d1ed40dc254f729023db9478f990aabce4cd644f29537bb"
 
 GOSRC_LICENSE += "\
     Apache-2.0 \

@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/codahale/hdrhistogram/@v/v1.1.0.zip;srcoutput=github.com/codahale/hdrhistogram;srcinput=github.com/codahale/hdrhistogram@v1.1.0;downloadfilename=github-com-codahale-hdrhistogram-1.1.0.zip;name=github-com-codahale-hdrhistogram"
-SRC_URI[github-com-codahale-hdrhistogram.sha256sum] = "5dfeb593ff3efd26d0e377f57c6b63e8b1084826b2293e04b83c491636371e3c"
+SRC_URI += "https://proxy.golang.org/github.com/codahale/hdrhistogram/@v/v1.1.2.zip;srcoutput=github.com/codahale/hdrhistogram;srcinput=github.com/codahale/hdrhistogram@v1.1.2;downloadfilename=github-com-codahale-hdrhistogram-1.1.2.zip;name=github-com-codahale-hdrhistogram"
+SRC_URI[github-com-codahale-hdrhistogram.sha256sum] = "82cb3ee61d580d677ebd191bbd22e77538a754b7c816ec985d8057a8b1347bdf"
 
 GOSRC_LICENSE += "\
     MIT \
