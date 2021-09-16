@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/rs/zerolog/@v/v1.23.0.zip;srcoutput=github.com/rs/zerolog;srcinput=github.com/rs/zerolog@v1.23.0;downloadfilename=github-com-rs-zerolog-1.23.0.zip;name=github-com-rs-zerolog"
-SRC_URI[github-com-rs-zerolog.sha256sum] = "1149a591e1c90d045fbe544199b42fa397b656a7de938fbab2bfcb75f30dba9b"
+SRC_URI += "https://proxy.golang.org/github.com/rs/zerolog/@v/v1.25.0.zip;srcoutput=github.com/rs/zerolog;srcinput=github.com/rs/zerolog@v1.25.0;downloadfilename=github-com-rs-zerolog-1.25.0.zip;name=github-com-rs-zerolog"
+SRC_URI[github-com-rs-zerolog.sha256sum] = "9097251984463cd8810e7b2e45d82289d84c8c92128f276f6774b454e3f6901c"
 
 GOSRC_LICENSE += "\
     MIT \
