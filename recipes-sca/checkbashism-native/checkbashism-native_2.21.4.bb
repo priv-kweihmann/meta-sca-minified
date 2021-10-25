@@ -1,5 +1,4 @@
-SUMMARY = "check for bashisms in /bin/sh scripts "
-DESCRIPTION = "check for bashisms in /bin/sh scripts "
+SUMMARY = "check for bashisms in /bin/sh scripts"
 HOMEPAGE = "https://salsa.debian.org/debian/devscripts"
 
 LICENSE = "GPLv2.0"
@@ -7,11 +6,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=faa39cbd7a7cded9a1436248295de3c2"
 
 DEPENDS += "perl-native"
 
-SRC_URI = "git://salsa.debian.org/debian/devscripts.git;protocol=https \
-           file://checkbashism.sca.description"
-SRCREV = "509007ad420681ba176231ee9a5da96a6e1f0a75"
+SRC_URI:append = " \
+    http://deb.debian.org/debian/pool/main/d/devscripts/devscripts_${PV}.tar.xz \
+    file://checkbashism.sca.description \
+"
 
-S = "${WORKDIR}/git"
+SRC_URI[sha256sum] = "c18885e36d9c78b319001d4dbaf64e1b85bd322cfd0f62a04cc9d48550f7397f"
+
+S = "${WORKDIR}/devscripts-${PV}"
+UPSTREAM_CHECK_REGEX = "devscripts_(?P<pver>\d+\.\d+\.\d+)"
 
 inherit sca-description
 inherit native
@@ -31,4 +34,4 @@ do_install() {
     install ${WORKDIR}/checkbashism.sca.description ${D}${datadir}
 }
 
-FILES:${PN} = "${bindir} ${datadir}"
+FILES:${PN} += "${bindir} ${datadir}"
