@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/creack/pty/@v/v1.1.15.zip;srcoutput=github.com/creack/pty;srcinput=github.com/creack/pty@v1.1.15;downloadfilename=github-com-creack-pty-1.1.15.zip;name=github-com-creack-pty"
-SRC_URI[github-com-creack-pty.sha256sum] = "7c0205e9a24cc366a154eb63b104294dadecb4ef9bf715ae8268c4514879cb40"
+SRC_URI += "https://proxy.golang.org/github.com/creack/pty/@v/v1.1.17.zip;srcoutput=github.com/creack/pty;srcinput=github.com/creack/pty@v1.1.17;downloadfilename=github-com-creack-pty-1.1.17.zip;name=github-com-creack-pty"
+SRC_URI[github-com-creack-pty.sha256sum] = "c6b0820b35c25f7d782f86c00545045b28992b6de894930634191feec56fc484"
 
 GOSRC_LICENSE += "\
     MIT \
