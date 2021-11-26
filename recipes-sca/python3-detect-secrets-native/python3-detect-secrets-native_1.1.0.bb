@@ -1,6 +1,7 @@
 SUMMARY = "An enterprise friendly way of detecting and preventing secrets in code"
 HOMEPAGE = "https://github.com/Yelp/detect-secrets"
 
+DEFAULT_PREFERENCE = "-1"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7c3c8615794b2f159ecd80b4c32f2f8f"
 
@@ -10,7 +11,7 @@ DEPENDS += "\
             python3-requests-native \
            "
 
-SRC_URI = "git://github.com/Yelp/detect-secrets.git;protocol=https"
+SRC_URI = "git://github.com/Yelp/detect-secrets.git;branch=master;protocol=https"
 SRC_URI += "file://detectsecrets.sca.description"
 SRCREV = "d7803997edac16c09d8cfe7a9c30305dada392ff"
 S = "${WORKDIR}/git"

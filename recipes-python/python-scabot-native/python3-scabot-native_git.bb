@@ -1,6 +1,7 @@
 SUMMARY = "SCA commenting bot"
 HOMEPAGE = "https://github.com/priv-kweihmann/scabot"
 
+DEFAULT_PREFERENCE = "-1"
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
@@ -13,7 +14,7 @@ DEPENDS += "\
 
 PV = "1.0.0+${SRCREV}"
 
-SRC_URI = "git://github.com/priv-kweihmann/scabot.git;protocol=https"
+SRC_URI = "git://github.com/priv-kweihmann/scabot.git;branch=master;protocol=https"
 SRCREV = "95cec6c70c1043d64c341172efb435f32ae9a482"
 
 S = "${WORKDIR}/git"

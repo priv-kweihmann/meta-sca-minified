@@ -88,7 +88,6 @@ SCA_AVAILABLE_MODULES ?= "\
                           alexkohler \
                           ansible \
                           ansiblelint \
-                          ansibleroles \
                           bandit \
                           bashate \
                           bitbake \
@@ -106,7 +105,6 @@ SCA_AVAILABLE_MODULES ?= "\
                           flawfinder \
                           flint \
                           gcc \
-                          gixy \
                           goconsistent \
                           goconst \
                           golicensecheck \
@@ -181,7 +179,6 @@ SCA_AVAILABLE_MODULES[wotan] = "openembedded-layer"
 
 # Modules using crossemu support, because they need some extra "love"
 _SCA_CROSSEMU_MODULES = "\
-    ansibleroles \
     checksec \
     configcheck \
     inspec \
