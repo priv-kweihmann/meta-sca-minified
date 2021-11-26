@@ -2,7 +2,6 @@ Module,Description,Homepage,Requires,Requires inet,Run on image,Run on recipe,C,
 alexkohler,Suite of GO analysis tools,https://github.com/alexkohler,,,,x,,,,,,,x,,,,,,,,,,x
 ansible,Hardening of images with ansible,,,,x,,,,,,,,,x,,,,,,,x,,
 ansiblelint,Linter for ansible playbooks,https://github.com/ansible/ansible-lint,,,x,x,,,,,,,,,,,,,,x,x,x,x
-ansibleroles,Hardening of images with 3rd party ansible roles,e.g. https://github.com/dev-sec,,,x,,,,,,,,,x,,,,,,,x,,
 bandit,Scan python code for insecurities,https://github.com/PyCQA/bandit,,,x,x,,,x,,,,,,,,,,,,x,,
 bashate,Shell script linter,http://docs.openstack.org/developer/bashate/,,,x,x,,,,x,,,,,,,,,,,,x,x
 bitbake,Bitbake issue handling,,,,x,x,,,,,,,,,,,,,x,,,x,x
@@ -24,7 +23,6 @@ flake8,Python linter,http://flake8.pycqa.org/en/latest/,,,x,x,,,x,,,,,,,,,,,,,x,
 flawfinder,C/C++ security linter,https://github.com/david-a-wheeler/flawfinder,,,,x,x,x,,,,,,,,,,,,,x,,
 flint,C/C++ linter,https://github.com/JossWhittle/FlintPlusPlus,,,,x,x,x,,,,,,,,,,,,,,x,
 gcc,GCC compiler issues and hardening,,,,,x,x,x,,,,,,,,,,,,,x,x,
-gixy,NGINX config security linter,https://github.com/yandex/gixy,,,x,,,,,,,,,,,,,,,x,x,,
 goconsistent,Source code analyzer that helps you to make your Go programs more consistent,https://github.com/quasilyte/go-consistent,,,,x,,,,,,,x,,,,,,,,,,x
 goconst,Find variables that could be constants in GO files,https://github.com/jgautheron/goconst,,,,x,,,,,,,x,,,,,,,,,,x
 golicensecheck,Scan code for license information,https://github.com/go-enry/go-license-detector,,,,x,,,,,,,,,,,,,,x,x,,

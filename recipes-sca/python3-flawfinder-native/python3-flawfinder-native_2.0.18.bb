@@ -1,12 +1,13 @@
 SUMMARY = "a static analysis tool for finding vulnerabilities in C/C++ source code"
 HOMEPAGE = "https://github.com/david-a-wheeler/flawfinder"
 
+DEFAULT_PREFERENCE = "-1"
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 
 DEPENDS += "python3-native"
 
-SRC_URI += "git://github.com/david-a-wheeler/flawfinder.git;protocol=https \
+SRC_URI += "git://github.com/david-a-wheeler/flawfinder.git;branch=master;protocol=https \
             file://flawfinder.sca.description"
 SRCREV = "51c988dc47885f525022b4d393ff4479024499f7"
 S = "${WORKDIR}/git"
