@@ -1,12 +1,12 @@
 SUMMARY = "This repo holds patterns for finding odd Go code"
 HOMEPAGE = "https://github.com/dgryski/semgrep-go.git"
 
-DEFAULT_PREFERENCE = "-1"
+DEFAULT_PREFERENCE = "${SCA_DEFAULT_PREFERENCE}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=cceb70c3f326568ccff13faee2f67113"
 
 SRC_URI = "git://github.com/dgryski/semgrep-go.git;branch=master;protocol=https"
-SRCREV = "b14e2f07411c22cadaab3a5d7df2346a99e7b36d"
+SRCREV = "8f4d0ddf679706d5f6a95fed3c63f23657c47ad2"
 UPSTREAM_CHECK_COMMITS = "1"
 
 S = "${WORKDIR}/git"
