@@ -1,7 +1,7 @@
 SUMMARY = "The leading static analyzer for Perl. Configurable, extensible, powerful"
 HOMEPAGE = "https://github.com/Perl-Critic/Perl-Critic"
 
-DEFAULT_PREFERENCE = "-1"
+DEFAULT_PREFERENCE = "${SCA_DEFAULT_PREFERENCE}"
 LICENSE = "GPL-1.0 & Artistic-1.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7aeaba565e72805da904a73fdc467406"
 
@@ -35,8 +35,7 @@ DEPENDS += "\
             perl-text-parsewords-native \
             "
 
-SRC_URI = "git://github.com/Perl-Critic/Perl-Critic.git;branch=master;protocol=https \
-           file://perlcritic.sca.description"
+SRC_URI = "git://github.com/Perl-Critic/Perl-Critic.git;branch=master;protocol=https"
 SRCREV = "47c8115b82f47bd27cba1af2f200694e69a1ef14"
 S = "${WORKDIR}/git"
 
@@ -46,13 +45,14 @@ inherit cpan_build
 inherit sca-description
 inherit native
 
+SCA_TOOL_DESCRIPTION = "perlcritic"
+
 do_compile () {
     perl Build verbose=1
 }
 
 do_install:append() {
-    install -d ${D}${datadir}
-    install ${WORKDIR}/perlcritic.sca.description ${D}${datadir}/
+    sed -i "s#/usr/bin/perl#/usr/bin/env perl#g" ${D}${bindir}/perlcritic
 }
 
-FILES:${PN} += "${datadir}"
+INSANE_SKIP:${PN} += "shebang-size"

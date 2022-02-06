@@ -1,15 +1,13 @@
 SUMMARY = "Ninja is a small build system with a focus on speed"
 DESCRIPTION = "This package will just provide the python bindings, but no executable"
 HOMEPAGE = "http://martine.github.com/ninja/"
-DEFAULT_PREFERENCE = "-1"
+DEFAULT_PREFERENCE = "${SCA_DEFAULT_PREFERENCE}"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE_Apache_20;md5=19cbd64715b51267a47bf3750cc6a8a5"
 
 DEPENDS += "\
-            cmake-native \
             ninja-native \
             python3-distro-native \
-            python3-scikit-build-native \
             python3-wheel-native \
            "
 
@@ -26,4 +24,8 @@ inherit pypi
 inherit setuptools3
 inherit native
 
-INSANE_SKIP:${PN} += "already-stripped"
+do_configure:prepend() {
+    # replace skbuild with plain setuptools
+    # to avoid invocation of cmake and network fetching
+    sed -i "s|from skbuild import setup|from setuptools import setup|g" ${S}/setup.py
+}
