@@ -1,5 +1,5 @@
-SRC_URI += "https://github.com/mvdan/sh/archive/refs/tags/v3.4.0.zip;srcoutput=mvdan.cc/sh;srcinput=sh-3.4.0;downloadfilename=mvdan-cc-sh-3.4.0.zip;name=mvdan-cc-sh"
-SRC_URI[mvdan-cc-sh.sha256sum] = "b610c1e636d6767ed07efd348869544cf2d574cdf2ec8babf3b3747b4948d2af"
+SRC_URI += "git://github.com/mvdan/sh;nobranch=1;protocol=https;srcinput=mvdan.cc/sh;srcoutput=mvdan.cc/sh;destsuffix=mvdan.cc/sh;name=mvdan-cc-sh"
+SRCREV_mvdan-cc-sh = "340f41a1f08872343140cf9014466142b0305915"
 
 GOSRC_LICENSE += "\
     BSD-3-Clause \

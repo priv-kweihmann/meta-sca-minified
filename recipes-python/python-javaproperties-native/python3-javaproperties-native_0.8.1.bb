@@ -1,7 +1,7 @@
 SUMMARY = "Read & write Java .properties files"
 HOMEPAGE = "https://github.com/jwodder/javaproperties"
 
-DEFAULT_PREFERENCE = "-1"
+DEFAULT_PREFERENCE = "${SCA_DEFAULT_PREFERENCE}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=731e3f36ccd931c8aa8b40c94ad267af"
 
@@ -11,12 +11,5 @@ PYPI_PACKAGE = "javaproperties"
 
 inherit pypi
 inherit setuptools3
+inherit sca-setuptools-legacy
 inherit native
-
-do_configure:prepend() {
-cat > ${S}/setup.py <<-EOF
-from setuptools import setup
-setup(name="javaproperties", version="${PV}", packages=["javaproperties"], package_data={"": ["*"]})
-EOF
-}
-

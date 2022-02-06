@@ -16,7 +16,7 @@ inherit sca-license-filter
 inherit sca-suppress
 inherit sca-image-backtrack
 
-DEPENDS += "libxml2-native"
+DEPENDS += "xmllint-sca-native"
 
 def do_sca_conv_xmllint(d):
     import os
@@ -63,6 +63,7 @@ python do_sca_xmllint_core() {
     _args = ["xmllint"]
     _args += ["--noout"]
     _args += ["--valid"]
+    _args += ["--nonet"]
 
     _files = get_files_by_extention(d, d.getVar("SCA_SOURCES_DIR"), d.getVar("SCA_XMLLINT_FILE_FILTER"), \
                                     sca_filter_files(d, d.getVar("SCA_SOURCES_DIR"), clean_split(d, "SCA_FILE_FILTER_EXTRA")))
