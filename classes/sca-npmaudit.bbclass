@@ -61,6 +61,11 @@ def do_sca_conv_npmaudit(d):
                                             ID=str(v["id"]),
                                             Severity=severity_map[v["severity"]])
                 else:
+                    if not any(v["via"]):
+                        continue
+                    if not isinstance(v["via"][0], dict):
+                        # skip if we missing required information
+                        continue
                     g = sca_get_model_class(d,
                                             PackageName=package_name,
                                             Tool="npmaudit",
@@ -117,6 +122,8 @@ python do_sca_npmaudit() {
                        d.expand("${STAGING_DATADIR_NATIVE}/npmaudit-${SCA_MODE}-fatal")))
 }
 
+# This tool unfortunately needs online access
+do_sca_npmaudit[network] = "1"
 do_sca_npmaudit[doc] = "Audit of used NPM packages"
 addtask do_sca_npmaudit before do_sca_deploy after do_compile
 
