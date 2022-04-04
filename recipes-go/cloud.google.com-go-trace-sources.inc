@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/cloud.google.com/go/trace/@v/v1.0.0.zip;srcoutput=cloud.google.com/go/trace;srcinput=cloud.google.com/go/trace@v1.0.0;downloadfilename=cloud-google-com-go-trace-1.0.0.zip;name=cloud-google-com-go-trace"
-SRC_URI[cloud-google-com-go-trace.sha256sum] = "759f8331cb8bb069ba9cc9836ed318eb5e50e9f1ad2f68e6935828692e6c5cc2"
+SRC_URI += "https://proxy.golang.org/cloud.google.com/go/trace/@v/v1.2.0.zip;srcoutput=cloud.google.com/go/trace;srcinput=cloud.google.com/go/trace@v1.2.0;downloadfilename=cloud-google-com-go-trace-1.2.0.zip;name=cloud-google-com-go-trace"
+SRC_URI[cloud-google-com-go-trace.sha256sum] = "5f97c6a9b3421b1e4139e6b66ce52e999077c1327a09037b59c134d41525cc9e"
 
 GOSRC_LICENSE += "\
     Apache-2.0 \

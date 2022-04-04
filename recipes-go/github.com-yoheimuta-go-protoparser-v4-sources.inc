@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/yoheimuta/go-protoparser/v4/@v/v4.5.0.zip;srcoutput=github.com/yoheimuta/go-protoparser/v4;srcinput=github.com/yoheimuta/go-protoparser/v4@v4.5.0;downloadfilename=github-com-yoheimuta-go-protoparser-v4-4.5.0.zip;name=github-com-yoheimuta-go-protoparser-v4"
-SRC_URI[github-com-yoheimuta-go-protoparser-v4.sha256sum] = "15defd52cbba62b109662b3ef3342dfb8a3be8bef64f730e9e6330a726941aea"
+SRC_URI += "https://proxy.golang.org/github.com/yoheimuta/go-protoparser/v4/@v/v4.5.4.zip;srcoutput=github.com/yoheimuta/go-protoparser/v4;srcinput=github.com/yoheimuta/go-protoparser/v4@v4.5.4;downloadfilename=github-com-yoheimuta-go-protoparser-v4-4.5.4.zip;name=github-com-yoheimuta-go-protoparser-v4"
+SRC_URI[github-com-yoheimuta-go-protoparser-v4.sha256sum] = "f12c80b1ebd1be704c4f0d7fc554631828ae24af3a6fc58fba3c29533046840b"
 
 GOSRC_LICENSE += "\
     MIT \
