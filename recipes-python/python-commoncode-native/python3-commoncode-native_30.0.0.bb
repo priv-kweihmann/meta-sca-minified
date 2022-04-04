@@ -15,7 +15,6 @@ DEPENDS += "\
             python3-setuptools-scm-native \
             python3-text-unidecode-native \
             python3-toml-native \
-            python3-typing-native \
            "
 
 SRC_URI = "\
@@ -27,3 +26,5 @@ S = "${WORKDIR}/git"
 
 inherit setuptools3
 inherit native
+
+PIP_INSTALL_PACKAGE = "commoncode"

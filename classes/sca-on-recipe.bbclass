@@ -11,7 +11,6 @@ inherit sca-deploy-recipe
 
 SCA_ENABLED_MODULES_RECIPE ?= "\
                             alexkohler \
-                            ansiblelint \
                             bandit \
                             bashate \
                             bitbake \
@@ -65,7 +64,6 @@ SCA_ENABLED_MODULES_RECIPE ?= "\
                             pylint \
                             pyright \
                             pysymcheck \
-                            pytype \
                             rats \
                             reek \
                             retire \

@@ -1,7 +1,5 @@
 Module,Description,Homepage,Requires,Requires inet,Run on image,Run on recipe,C,C++,Python,Shell,Javascript,PHP,Go,Images,LUA,Spelling,Metrics,Binaries,Packages,Other formats,Security scope,Functional scope,Style scope
 alexkohler,Suite of GO analysis tools,https://github.com/alexkohler,,,,x,,,,,,,x,,,,,,,,,,x
-ansible,Hardening of images with ansible,,,,x,,,,,,,,,x,,,,,,,x,,
-ansiblelint,Linter for ansible playbooks,https://github.com/ansible/ansible-lint,,,x,x,,,,,,,,,,,,,,x,x,x,x
 bandit,Scan python code for insecurities,https://github.com/PyCQA/bandit,,,x,x,,,x,,,,,,,,,,,,x,,
 bashate,Shell script linter,http://docs.openstack.org/developer/bashate/,,,x,x,,,,x,,,,,,,,,,,,x,x
 bitbake,Bitbake issue handling,,,,x,x,,,,,,,,,,,,,x,,,x,x
@@ -62,7 +60,6 @@ pyfindinjection,Find SQL injections in python code,https://github.com/uber/py-fi
 pylint,Python linter,https://github.com/PyCQA/pylint,,,x,x,,,x,,,,,,,,,,,,,x,x
 pyright,Python type linter,https://github.com/Microsoft/pyright,"meta-oe, manual enable",x,,x,,,x,,,,,,,,,,,,,x,
 pysymcheck,Check binaries for forbidden function usage,https://github.com/priv-kweihmann/pysymbolcheck,,,,x,,,,,,,,,,,,x,,,x,,
-pytype,Python linter using type-annotations,https://github.com/google/pytype,,x,,x,,,x,,,,,,,,,,,,,x,
 rats,Check on insecurities in several languages,https://github.com/redNixon/rats,,,,x,,x,x,x,,x,,,,,,,,,x,,
 reconbf,security audit tool,https://github.com/HewlettPackard/reconbf,,,x,,,,,,,,,x,,,,,,,x,,
 reek,Code smell detector for Ruby,https://github.com/troessner/reek,"meta-rubygems, manual enable",,,x,,,,,,,,,,,,,,x,,,x

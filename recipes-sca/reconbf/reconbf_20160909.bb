@@ -19,7 +19,7 @@ inherit sca-description
 
 SCA_TOOL_DESCRIPTION = "reconbf"
 
-FILES:${PN} += "${datadir}"
+FILES:${PN} += "${datadir} ${prefix}/etc"
 
 RDEPENDS:${PN}:class-target += "\
                                 python3-compression \
