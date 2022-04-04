@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/cncf/xds/go/@v/v0.0.0-20220121163655-4a2b9fdd466b.zip;srcoutput=github.com/cncf/xds/go;srcinput=github.com/cncf/xds/go@v0.0.0-20220121163655-4a2b9fdd466b;downloadfilename=github-com-cncf-xds-go-0.0.0-20220121163655-4a2b9fdd466b.zip;name=github-com-cncf-xds-go"
-SRC_URI[github-com-cncf-xds-go.sha256sum] = "5685f75602459a21e496350178d0f94fef894e4601f590b2c95359c7131a5add"
+SRC_URI += "https://proxy.golang.org/github.com/cncf/xds/go/@v/v0.0.0-20220330162227-eded343319d0.zip;srcoutput=github.com/cncf/xds/go;srcinput=github.com/cncf/xds/go@v0.0.0-20220330162227-eded343319d0;downloadfilename=github-com-cncf-xds-go-0.0.0-20220330162227-eded343319d0.zip;name=github-com-cncf-xds-go"
+SRC_URI[github-com-cncf-xds-go.sha256sum] = "81e609546e9e960e63f679a66e866888a96b4448ee04167266a776e9b9600bcf"
 
 GOSRC_LICENSE += "\
     Apache-2.0 \
