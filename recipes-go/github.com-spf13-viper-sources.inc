@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/spf13/viper/@v/v1.10.1.zip;srcoutput=github.com/spf13/viper;srcinput=github.com/spf13/viper@v1.10.1;downloadfilename=github-com-spf13-viper-1.10.1.zip;name=github-com-spf13-viper"
-SRC_URI[github-com-spf13-viper.sha256sum] = "2b61d4acb9d5bdfabb14b6789c15c87c2b97b76e00396d4e64e1296482bc2e58"
+SRC_URI += "https://proxy.golang.org/github.com/spf13/viper/@v/v1.12.0.zip;srcoutput=github.com/spf13/viper;srcinput=github.com/spf13/viper@v1.12.0;downloadfilename=github-com-spf13-viper-1.12.0.zip;name=github-com-spf13-viper"
+SRC_URI[github-com-spf13-viper.sha256sum] = "51dcee7805a5d57f5c12fcc7be630045823d522cfab2b8436b4e595fc784108c"
 
 GOSRC_LICENSE += "\
     MIT \
@@ -15,6 +15,7 @@ require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-hashicorp-hcl-sou
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-magiconair-properties-sources.inc', '', 'github.com-magiconair-properties-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-mitchellh-mapstructure-sources.inc', '', 'github.com-mitchellh-mapstructure-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-pelletier-go-toml-sources.inc', '', 'github.com-pelletier-go-toml-sources.inc', d)}
+require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-pelletier-go-toml-v2-sources.inc', '', 'github.com-pelletier-go-toml-v2-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-sagikazarmark-crypt-sources.inc', '', 'github.com-sagikazarmark-crypt-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-spf13-afero-sources.inc', '', 'github.com-spf13-afero-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-spf13-cast-sources.inc', '', 'github.com-spf13-cast-sources.inc', d)}
@@ -23,3 +24,4 @@ require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-spf13-pflag-sourc
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-subosito-gotenv-sources.inc', '', 'github.com-subosito-gotenv-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'gopkg.in-ini.v1-sources.inc', '', 'gopkg.in-ini.v1-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'gopkg.in-yaml.v2-sources.inc', '', 'gopkg.in-yaml.v2-sources.inc', d)}
+require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'gopkg.in-yaml.v3-sources.inc', '', 'gopkg.in-yaml.v3-sources.inc', d)}

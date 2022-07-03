@@ -6,88 +6,59 @@
 inherit sca-global
 inherit sca-helper
 inherit sca-file-filter
-inherit sca-blacklist
+inherit sca-blocklist
 inherit sca-deploy-recipe
 
 SCA_ENABLED_MODULES_RECIPE ?= "\
-                            alexkohler \
                             bandit \
                             bashate \
                             bitbake \
                             cbmc \
                             checkbashism \
-                            clang \
                             cmake \
                             cppcheck \
                             cpplint \
-                            cspell \
                             cvecheck \
                             darglint \
                             dennis \
                             detectsecrets \
-                            eslint \
                             flake8 \
                             flawfinder \
                             flint \
                             gcc \
-                            goconsistent \
-                            goconst \
                             golicensecheck \
                             golint \
-                            gosec \
-                            htmlhint \
                             it \
-                            jshint \
                             jsonlint \
                             kconfighard \
                             licensecheck \
                             looong \
-                            luacheck \
-                            npmaudit \
                             msgcheck \
                             multimetric \
                             mypy \
                             oelint \
                             perl \
                             perlcritic \
-                            phan \
-                            phpcodefixer \
-                            phpcodesniffer \
-                            phpmd \
-                            phpsecaudit \
-                            phpstan \
                             pkgqaenc \
-                            proselint \
                             protolint \
                             pscan \
                             pyfindinjection \
                             pylint \
-                            pyright \
                             pysymcheck \
                             rats \
-                            reek \
-                            retire \
                             reuse \
                             revive \
-                            ropgadget \
-                            rubycritic \
                             safety \
                             scancode \
-                            secretlint \
-                            semgrep \
                             setuptoolslint \
                             shellcheck \
                             slick \
                             sparse \
-                            standard \
                             stank \
-                            stylelint \
                             systemdlint \
-                            textlint \
                             tlv \
                             tscancode \
                             vulture \
-                            wotan \
                             xmllint \
                             yamllint \
                             "
@@ -104,14 +75,14 @@ def sca_on_recipe_init(d):
     for item in intersect_lists(d, d.getVar("SCA_ENABLED_MODULES"), d.getVar("SCA_AVAILABLE_MODULES")):
         if not sca_module_applicable(d, item):
             continue
-        if sca_is_module_blacklisted(d, item) or not any(sca_filter_by_license(d)):
+        if sca_is_module_blocklisted(d, item) or not any(sca_filter_by_license(d)):
             continue
         okay = False
         try:
             BBHandler.inherit("sca-{}".format(item), "sca-on-recipe", 1, d)
             func = "sca-{}-init".format(item).replace("-", "_")
             if d.getVar(func, False) is not None:
-                bb.build.exec_func(func, d, **get_bb_exec_ext_parameter_support(d))
+                bb.build.exec_func(func, d)
             okay = True
         except bb.parse.ParseError:
             pass
@@ -120,18 +91,12 @@ def sca_on_recipe_init(d):
             BBHandler.inherit("sca-{}-recipe".format(item), "sca-on-recipe", 1, d)
             func = "sca-{}-init".format(item).replace("-", "_")
             if d.getVar(func, False) is not None:
-                bb.build.exec_func(func, d, **get_bb_exec_ext_parameter_support(d))
+                bb.build.exec_func(func, d)
             okay = True
         except bb.parse.ParseError:
             pass
         if okay:
             enabledModules.append(item)
-    if d.getVar("SCA_ENABLE_BESTOF") == "1":
-        BBHandler.inherit("sca-{}-recipe".format("bestof"), "sca-on-recipe", 1, d)
-        func = "sca-{}-init".format("bestof").replace("-", "_")
-        enabledModules.append("bestof")
-        if d.getVar(func, False) is not None:
-            bb.build.exec_func(func, d, **get_bb_exec_ext_parameter_support(d))
     if any(enabledModules):
         if d.getVar("SCA_VERBOSE_OUTPUT") == "1":
             bb.note("Using SCA Module(s) {}".format(",".join(sorted(enabledModules))))

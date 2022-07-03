@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/subosito/gotenv/@v/v1.2.0.zip;srcoutput=github.com/subosito/gotenv;srcinput=github.com/subosito/gotenv@v1.2.0;downloadfilename=github-com-subosito-gotenv-1.2.0.zip;name=github-com-subosito-gotenv"
-SRC_URI[github-com-subosito-gotenv.sha256sum] = "21474df92536f36de6f91dfbf466995289445cc4e5a5900d9c40ae8776b8b0cf"
+SRC_URI += "https://proxy.golang.org/github.com/subosito/gotenv/@v/v1.4.0.zip;srcoutput=github.com/subosito/gotenv;srcinput=github.com/subosito/gotenv@v1.4.0;downloadfilename=github-com-subosito-gotenv-1.4.0.zip;name=github-com-subosito-gotenv"
+SRC_URI[github-com-subosito-gotenv.sha256sum] = "e3800909df2f0bc9370449dc02017482cae3a2a1dc98d2f70c8b3a2cfda346dd"
 
 GOSRC_LICENSE += "\
     MIT \

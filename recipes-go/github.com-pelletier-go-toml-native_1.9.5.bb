@@ -9,5 +9,8 @@ require github.com-pelletier-go-toml-sources.inc
 
 GO_IMPORT = "github.com/pelletier/go-toml"
 
+# needs CGO
+do_compile[noexec] = "1"
+
 inherit gosrc
 inherit native

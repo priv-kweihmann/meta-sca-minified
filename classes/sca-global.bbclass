@@ -54,12 +54,6 @@ SCA_AUTO_LICENSE_FILTER ?= ".*"
 ## possible options error, warning or info
 SCA_WARNING_LEVEL ?= "warning"
 
-## Enable an extra report per image
-SCA_ENABLE_IMAGE_SUMMARY ?= "1"
-
-## Enable an extra report from bestof-module
-SCA_ENABLE_BESTOF ?= "0"
-
 ## Shebang for python interpreter
 SCA_PYTHON_SHEBANG = ".*python3"
 
@@ -75,8 +69,8 @@ SCA_FORCE_RUN ??= "0"
 ## Verbose output of SCA invocation
 SCA_VERBOSE_OUTPUT ??= "0"
 
-## Skip SCA when running under devtool (default = autodetect)
-SCA_SKIP_DEVTOOL ??= "${@oe.utils.ifelse(bb.data.inherits_class('externalsrc', d), '1', '0')}"
+## Skip SCA when running under devtool (default = off)
+SCA_SKIP_DEVTOOL ??= "0"
 
 ## Filter by scope
 SCA_SCOPE_FILTER ?= "security functional compliance style"
@@ -87,7 +81,6 @@ SCA_SEVERITY_TRANSFORM ?= ""
 
 ## List of overall available modules
 SCA_AVAILABLE_MODULES ?= "\
-                          alexkohler \
                           bandit \
                           bashate \
                           bitbake \
@@ -98,6 +91,7 @@ SCA_AVAILABLE_MODULES ?= "\
                           configcheck \
                           cppcheck \
                           cpplint \
+                          cvecheck \
                           darglint \
                           dennis \
                           detectsecrets \
@@ -105,25 +99,22 @@ SCA_AVAILABLE_MODULES ?= "\
                           flawfinder \
                           flint \
                           gcc \
-                          goconsistent \
-                          goconst \
                           golicensecheck \
                           golint \
-                          gosec \
                           it \
                           jsonlint \
                           kconfighard \
+                          licensecheck \
                           looong \
                           lse \
                           lynis \
                           msgcheck \
+                          multimetric \
                           mypy \
-                          nixauditor \
                           oelint \
                           perl \
                           perlcritic \
                           pkgqaenc \
-                          proselint \
                           protolint \
                           pscan \
                           pyfindinjection \
@@ -134,7 +125,7 @@ SCA_AVAILABLE_MODULES ?= "\
                           reuse \
                           revive \
                           safety \
-                          semgrep \
+                          scancode \
                           setuptoolslint \
                           shellcheck \
                           slick \
@@ -148,41 +139,14 @@ SCA_AVAILABLE_MODULES ?= "\
                           vulture \
                           xmllint \
                           yamllint \
-                          yara \
                         "
-# additional layer requirements
-SCA_AVAILABLE_MODULES[clang] = "clang-layer"
-SCA_AVAILABLE_MODULES[cspell] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[eslint] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[htmlhint] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[inspec] = "openembedded-layer rubygems"
-SCA_AVAILABLE_MODULES[jshint] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[luacheck] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[npmaudit] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[phan] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[phpcodefixer] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[phpcodesniffer] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[phpmd] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[phpsecaudit] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[phpstan] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[pyright] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[reek] = "rubygems"
-SCA_AVAILABLE_MODULES[retire] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[rubycritic] = "rubygems"
-SCA_AVAILABLE_MODULES[secretlint] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[standard] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[stylelint] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[textlint] = "openembedded-layer"
-SCA_AVAILABLE_MODULES[wotan] = "openembedded-layer"
 
 # Modules using crossemu support, because they need some extra "love"
 _SCA_CROSSEMU_MODULES = "\
     checksec \
     configcheck \
-    inspec \
     lse \
     lynis \
-    nixauditor \
     reconbf \
     sudokiller \
     tiger \

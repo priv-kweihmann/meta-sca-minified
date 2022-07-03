@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/google/btree/@v/v1.0.1.zip;srcoutput=github.com/google/btree;srcinput=github.com/google/btree@v1.0.1;downloadfilename=github-com-google-btree-1.0.1.zip;name=github-com-google-btree"
-SRC_URI[github-com-google-btree.sha256sum] = "9b9f66ca4eb36bb1867b5ff9134fb2eb9fe9717d44e28836f2e977f9c03b4128"
+SRC_URI += "https://proxy.golang.org/github.com/google/btree/@v/v1.1.2.zip;srcoutput=github.com/google/btree;srcinput=github.com/google/btree@v1.1.2;downloadfilename=github-com-google-btree-1.1.2.zip;name=github-com-google-btree"
+SRC_URI[github-com-google-btree.sha256sum] = "faee8550c5fffb4ae1dadde5ccaccb13298726f9fad226bb4eed0c03c90a481d"
 
 GOSRC_LICENSE += "\
     Apache-2.0 \

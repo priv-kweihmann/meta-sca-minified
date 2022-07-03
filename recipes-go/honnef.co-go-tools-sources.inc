@@ -1,5 +1,5 @@
 SRC_URI += "git://github.com/dominikh/go-tools;nobranch=1;protocol=https;srcinput=honnef.co/go/tools;srcoutput=honnef.co/go/tools;destsuffix=honnef.co/go/tools;name=honnef-co-go-tools"
-SRCREV_honnef-co-go-tools = "136263dd90157dc2f9f8937759c51b2cb7552bb6"
+SRCREV_honnef-co-go-tools = "7586196b2bb05a248f1934d8087c759d05910e60"
 
 GOSRC_LICENSE += "\
     BSD-3-Clause \
@@ -19,4 +19,3 @@ require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-burntsushi-toml-s
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-exp-typeparams-sources.inc', '', 'golang.org-x-exp-typeparams-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-sys-sources.inc', '', 'golang.org-x-sys-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-tools-sources.inc', '', 'golang.org-x-tools-sources.inc', d)}
-require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-xerrors-sources.inc', '', 'golang.org-x-xerrors-sources.inc', d)}
