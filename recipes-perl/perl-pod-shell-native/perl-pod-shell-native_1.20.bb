@@ -21,3 +21,10 @@ S = "${WORKDIR}/Pod-Spell-${PV}"
 
 inherit cpan
 inherit native
+
+RDEPENDS:${PN}:class-nativesdk += "\
+    nativesdk-perl \
+    nativesdk-perl-class-tiny \
+    nativesdk-perl-en-lingua-inflect \
+    nativesdk-perl-path-tiny \
+"

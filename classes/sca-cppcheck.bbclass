@@ -63,7 +63,7 @@ def do_sca_conv_cppcheck(d):
     }
 
     _findings = []
-    _suppress = sca_suppress_init(d, "SCA_CPPCHECK_EXTRA_SUPPRESS",
+    _suppress = sca_suppress_init(d, clean_split(d, "SCA_CPPCHECK_EXTRA_SUPPRESS"),
                                   d.expand("${STAGING_DATADIR_NATIVE}/cppcheck-${SCA_MODE}-suppress"))
 
     if os.path.exists(sca_raw_result_file(d, "cppcheck")):
@@ -104,16 +104,21 @@ python do_sca_cppcheck() {
     import os
     import subprocess
 
-    _user_rules = os.path.join(d.getVar("STAGING_DATADIR_NATIVE"), "cppcheck-user-rules.xml")
     _add_include = d.getVar("SCA_CPPCHECK_ADD_INCLUDES").split(" ")
 
     # Copy configurations into special dir
+    try:
+        os.unlink(d.expand("${T}/cfg"))
+    except:
+        pass
+    try:
+        os.unlink(d.expand("${T}/platform"))
+    except:
+        pass
     subprocess.check_call(["ln", "-sf", d.expand("${STAGING_DATADIR_NATIVE}/cfg"), d.expand("${T}/cfg")])
     subprocess.check_call(["ln", "-sf", d.expand("${STAGING_DATADIR_NATIVE}/platform"), d.expand("${T}/platform")])
 
     _args = ["cppcheck"]
-    if os.path.exists(_user_rules):
-        _args += ["--rule-file={}".format(_user_rules)]
 
     if d.getVar("SCA_CPPCHECK_RUNMODE") == "complete":
         _args += ["--enable=all"]
@@ -164,7 +169,7 @@ python do_sca_cppcheck_report() {
     with open(d.getVar("SCA_DATAMODEL_STORAGE"), "w") as o:
         o.write(dm_output)
 
-    sca_task_aftermath(d, "cppcheck", get_fatal_entries(d, d.getVar("SCA_CPPCHECK_EXTRA_FATAL"),
+    sca_task_aftermath(d, "cppcheck", get_fatal_entries(d, clean_split(d, "SCA_CPPCHECK_EXTRA_FATAL"),
                       d.expand("${STAGING_DATADIR_NATIVE}/cppcheck-${SCA_MODE}-fatal")))
 }
 

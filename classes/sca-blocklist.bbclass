@@ -3,7 +3,7 @@
 
 ## This class provides the configuration for blocklisting modules from certain recipes
 ## All configuration is described through space-separated regular expression
-SCA_BLOCKLIST ?= ".*-native .*-cross nativesdk-.* clang"
+SCA_BLOCKLIST ?= ".*-native .*-cross clang"
 SCA_BLOCKLIST_bandit ?= "linux-.*"
 SCA_BLOCKLIST_bashate ?= ""
 SCA_BLOCKLIST_bitbake ?= ""
@@ -48,7 +48,6 @@ SCA_BLOCKLIST_pysymcheck ?= ""
 SCA_BLOCKLIST_rats ?= ""
 SCA_BLOCKLIST_reconbf ?= ""
 SCA_BLOCKLIST_revive ?= "openssh"
-SCA_BLOCKLIST_safety ?= ""
 SCA_BLOCKLIST_scancode ?= ""
 SCA_BLOCKLIST_setuptoolslint ?= ""
 SCA_BLOCKLIST_shellcheck ?= ""

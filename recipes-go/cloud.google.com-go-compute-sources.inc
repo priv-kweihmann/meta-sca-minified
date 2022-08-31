@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/cloud.google.com/go/compute/@v/v1.7.0.zip;srcoutput=cloud.google.com/go/compute;srcinput=cloud.google.com/go/compute@v1.7.0;downloadfilename=cloud-google-com-go-compute-1.7.0.zip;name=cloud-google-com-go-compute"
-SRC_URI[cloud-google-com-go-compute.sha256sum] = "e44e2fbbfe3b0f94509397da36bba53a28857ac2c2985dde9c25cb391d09f866"
+SRC_URI += "https://proxy.golang.org/cloud.google.com/go/compute/@v/v1.9.0.zip;srcoutput=cloud.google.com/go/compute;srcinput=cloud.google.com/go/compute@v1.9.0;downloadfilename=cloud-google-com-go-compute-1.9.0.zip;name=cloud-google-com-go-compute"
+SRC_URI[cloud-google-com-go-compute.sha256sum] = "b8f13c834cf5e8f30a74fa7a0da7b669b9da52606db54a94e989be750d26df36"
 
 GOSRC_LICENSE += "\
     Apache-2.0 \

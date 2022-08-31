@@ -124,7 +124,6 @@ SCA_AVAILABLE_MODULES ?= "\
                           reconbf \
                           reuse \
                           revive \
-                          safety \
                           scancode \
                           setuptoolslint \
                           shellcheck \
@@ -158,6 +157,7 @@ SCA_HASHEXCLUDE_VARS = "\
                         __SCA_DATAMODEL_STORAGE \
                         SCA_DATAMODEL_STORAGE \
                         SCA_LAYERDIR \
+                        SCA_SDKGEN_TASKS \
                         "
 
 # some global vardepexcludes

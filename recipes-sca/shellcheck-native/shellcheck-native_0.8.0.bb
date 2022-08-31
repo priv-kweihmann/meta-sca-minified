@@ -2,7 +2,7 @@ SUMMARY = "Static code analyzer for shell-scripts"
 HOMEPAGE = "https://www.shellcheck.net/"
 BUGTRACKER = "https://github.com/koalaman/shellcheck/issues"
 
-COMPATIBLE_HOST = "^x86_64-linux|^aarch64-linux|^arm-linux"
+COMPATIBLE_HOST = "^x86_64-linux|^aarch64-linux|^arm-linux|.*x86-64|.*aarch64|.*arm"
 
 DEFAULT_PREFERENCE = "${SCA_DEFAULT_PREFERENCE}"
 LICENSE = "GPL-3.0-only"
@@ -42,6 +42,9 @@ inherit native
 
 SCA_TOOL_DESCRIPTION = "shellcheck"
 
+WRAPPER_LIBPATH:class-native = "${STAGING_LIBDIR_NATIVE}"
+WRAPPER_LIBPATH:class-nativesdk = "${libdir}"
+
 do_install() {
     install -d ${D}${bindir}
     cp -R ${S}/shellcheck ${D}${bindir}
@@ -50,11 +53,11 @@ do_install() {
     cat << EOF > ${D}${bindir}/shellcheck-wrapper
 #!/bin/sh
 
-if [ ! -e "${STAGING_LIBDIR_NATIVE}/libffi.so.7" -a -e "${STAGING_LIBDIR_NATIVE}/libffi.so.6" ]; then
-   ln -s ${STAGING_LIBDIR_NATIVE}/libffi.so.6 ${STAGING_LIBDIR_NATIVE}/libffi.so.7
+if [ ! -e "${WRAPPER_LIBPATH}/libffi.so.7" -a -e "${WRAPPER_LIBPATH}/libffi.so.6" ]; then
+   ln -s ${WRAPPER_LIBPATH}/libffi.so.6 ${WRAPPER_LIBPATH}/libffi.so.7
 fi
 
-LD_LIBRARY_PATH=${STAGING_LIBDIR_NATIVE} shellcheck \$@
+LD_LIBRARY_PATH=${WRAPPER_LIBPATH} shellcheck \$@
 EOF
     chmod 0755 ${D}${bindir}/shellcheck-wrapper
 }
@@ -66,3 +69,9 @@ UPSTREAM_CHECK_REGEX = "releases/tag/v(?P<pver>\d+\.\d+\.\d+)"
 
 ## We know it's already stripped - because we're using prebuild things
 INSANE_SKIP:${PN} += "already-stripped arch"
+
+RDEPENDS:${PN}:class-nativesdk += "\
+    nativesdk-dpkg \
+    nativesdk-gmp \
+    nativesdk-libffi \
+"
