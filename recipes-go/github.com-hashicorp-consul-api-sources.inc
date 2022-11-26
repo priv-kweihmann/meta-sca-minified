@@ -1,11 +1,11 @@
-SRC_URI += "https://proxy.golang.org/github.com/hashicorp/consul/api/@v/v1.14.0.zip;srcoutput=github.com/hashicorp/consul/api;srcinput=github.com/hashicorp/consul/api@v1.14.0;downloadfilename=github-com-hashicorp-consul-api-1.14.0.zip;name=github-com-hashicorp-consul-api"
-SRC_URI[github-com-hashicorp-consul-api.sha256sum] = "378c0a4dbf0ef2d06858f6525a1301f2db366bbcdcaa242083528435f4e0ed61"
+SRC_URI += "https://proxy.golang.org/github.com/hashicorp/consul/api/@v/v1.17.0.zip;srcoutput=github.com/hashicorp/consul/api;srcinput=github.com/hashicorp/consul/api@v1.17.0;downloadfilename=github-com-hashicorp-consul-api-1.17.0.zip;name=github-com-hashicorp-consul-api"
+SRC_URI[github-com-hashicorp-consul-api.sha256sum] = "79a8af51580ee3e8d0a75228780688b0e9006e063316bc2bb00af3a3b530d0f1"
 
 GOSRC_LICENSE += "\
     MPL-2.0 \
 "
 LIC_FILES_CHKSUM += "\
-    file://src/github.com/hashicorp/consul/api/LICENSE;md5=b278a92d2c1509760384428817710378 \
+    file://src/github.com/hashicorp/consul/api/LICENSE;md5=b8a277a612171b7526e9be072f405ef4 \
 "
 
 GOSRC_INCLUDEGUARD += "github.com-hashicorp-consul-api-sources.inc"

@@ -1,11 +1,13 @@
-SRC_URI += "https://proxy.golang.org/golang.org/x/exp/shiny/@v/v0.0.0-20220827204233-334a2380cb91.zip;srcoutput=golang.org/x/exp/shiny;srcinput=golang.org/x/exp/shiny@v0.0.0-20220827204233-334a2380cb91;downloadfilename=golang-org-x-exp-shiny-0.0.0-20220827204233-334a2380cb91.zip;name=golang-org-x-exp-shiny"
-SRC_URI[golang-org-x-exp-shiny.sha256sum] = "a507295c1d5d68f08b40754bfc1468fab9d3e1bc89592cd88920d1ba894f7cce"
+SRC_URI += "https://proxy.golang.org/golang.org/x/exp/shiny/@v/v0.0.0-20221114191408-850992195362.zip;srcoutput=golang.org/x/exp/shiny;srcinput=golang.org/x/exp/shiny@v0.0.0-20221114191408-850992195362;downloadfilename=golang-org-x-exp-shiny-0.0.0-20221114191408-850992195362.zip;name=golang-org-x-exp-shiny"
+SRC_URI[golang-org-x-exp-shiny.sha256sum] = "db2c475691eac5ccd2d58862ae01fc7799c7044ead1b94e8b877b9805a20e2ab"
 
 GOSRC_LICENSE += "\
+    Apache-2.0 \
     BSD-3-Clause \
 "
 LIC_FILES_CHKSUM += "\
     file://src/golang.org/x/exp/shiny/LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707 \
+    file://src/golang.org/x/exp/shiny/materialdesign/icons/LICENSE;md5=175792518e4ac015ab6696d16c4f607e \
 "
 
 GOSRC_INCLUDEGUARD += "golang.org-x-exp-shiny-sources.inc"

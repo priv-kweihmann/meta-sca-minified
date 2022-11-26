@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/gioui.org/@v/v0.0.0-20220829131151-020eb27ff534.zip;srcoutput=gioui.org;srcinput=gioui.org@v0.0.0-20220829131151-020eb27ff534;downloadfilename=gioui-org-0.0.0-20220829131151-020eb27ff534.zip;name=gioui-org"
-SRC_URI[gioui-org.sha256sum] = "f68da8310694f9147687ffc3a87ba96f7ea91f0284ff73a18750eaade2781610"
+SRC_URI += "https://proxy.golang.org/gioui.org/@v/v0.0.0-20221122135904-dee53b364560.zip;srcoutput=gioui.org;srcinput=gioui.org@v0.0.0-20221122135904-dee53b364560;downloadfilename=gioui-org-0.0.0-20221122135904-dee53b364560.zip;name=gioui-org"
+SRC_URI[gioui-org.sha256sum] = "b5cb6de06af13a1c39179e512f1973dc8665448a91236fc80cf4842a3038ad79"
 
 GOSRC_LICENSE += "\
     MIT \
@@ -17,6 +17,5 @@ require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-benoitkugler-text
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-gioui-uax-sources.inc', '', 'github.com-gioui-uax-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'github.com-go-text-typesetting-sources.inc', '', 'github.com-go-text-typesetting-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-exp-shiny-sources.inc', '', 'golang.org-x-exp-shiny-sources.inc', d)}
-require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-exp-sources.inc', '', 'golang.org-x-exp-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-image-sources.inc', '', 'golang.org-x-image-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-sys-sources.inc', '', 'golang.org-x-sys-sources.inc', d)}

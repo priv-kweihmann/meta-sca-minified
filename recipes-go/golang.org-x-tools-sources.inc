@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/golang.org/x/tools/@v/v0.1.12.zip;srcoutput=golang.org/x/tools;srcinput=golang.org/x/tools@v0.1.12;downloadfilename=golang-org-x-tools-0.1.12.zip;name=golang-org-x-tools"
-SRC_URI[golang-org-x-tools.sha256sum] = "4b122e0e4703bc4014cb1cf8c014fcf93ea7d72f01da79499365346f54cbb851"
+SRC_URI += "https://proxy.golang.org/golang.org/x/tools/@v/v0.3.0.zip;srcoutput=golang.org/x/tools;srcinput=golang.org/x/tools@v0.3.0;downloadfilename=golang-org-x-tools-0.3.0.zip;name=golang-org-x-tools"
+SRC_URI[golang-org-x-tools.sha256sum] = "bb1015223eedb7e52772fcf955f14c4eabf068229c28043f36bf28a475e5e1a7"
 
 GOSRC_LICENSE += "\
     BSD-3-Clause \
@@ -16,4 +16,3 @@ require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-mod-sources.inc
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-net-sources.inc', '', 'golang.org-x-net-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-sync-sources.inc', '', 'golang.org-x-sync-sources.inc', d)}
 require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-sys-sources.inc', '', 'golang.org-x-sys-sources.inc', d)}
-require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'golang.org-x-text-sources.inc', '', 'golang.org-x-text-sources.inc', d)}

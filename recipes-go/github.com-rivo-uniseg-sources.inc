@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/rivo/uniseg/@v/v0.3.4.zip;srcoutput=github.com/rivo/uniseg;srcinput=github.com/rivo/uniseg@v0.3.4;downloadfilename=github-com-rivo-uniseg-0.3.4.zip;name=github-com-rivo-uniseg"
-SRC_URI[github-com-rivo-uniseg.sha256sum] = "410ba5034e1683946d68e7fd50ad793c2ad72b157f2959fe4719449666d1e63f"
+SRC_URI += "https://proxy.golang.org/github.com/rivo/uniseg/@v/v0.4.3.zip;srcoutput=github.com/rivo/uniseg;srcinput=github.com/rivo/uniseg@v0.4.3;downloadfilename=github-com-rivo-uniseg-0.4.3.zip;name=github-com-rivo-uniseg"
+SRC_URI[github-com-rivo-uniseg.sha256sum] = "bac292df998571a72a5dcdf9150dedc56b3b611c81bc1b6ff84055e1a434832d"
 
 GOSRC_LICENSE += "\
     MIT \
