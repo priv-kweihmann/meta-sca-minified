@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/go.uber.org/multierr/@v/v1.8.0.zip;srcoutput=go.uber.org/multierr;srcinput=go.uber.org/multierr@v1.8.0;downloadfilename=go-uber-org-multierr-1.8.0.zip;name=go-uber-org-multierr"
-SRC_URI[go-uber-org-multierr.sha256sum] = "0077abedf9a4798c50e015045b5cc092b8001be6d994fc59781c4b0d6ae94507"
+SRC_URI += "https://proxy.golang.org/go.uber.org/multierr/@v/v1.10.0.zip;srcoutput=go.uber.org/multierr;srcinput=go.uber.org/multierr@v1.10.0;downloadfilename=go-uber-org-multierr-1.10.0.zip;name=go-uber-org-multierr"
+SRC_URI[go-uber-org-multierr.sha256sum] = "4f9b84b659dea0f46b036655fd3bd81a608de982fe2456e38637dc9eb24faf0d"
 
 GOSRC_LICENSE += "\
     MIT \
@@ -10,4 +10,3 @@ LIC_FILES_CHKSUM += "\
 
 GOSRC_INCLUDEGUARD += "go.uber.org-multierr-sources.inc"
 
-require ${@bb.utils.contains('GOSRC_INCLUDEGUARD', 'go.uber.org-atomic-sources.inc', '', 'go.uber.org-atomic-sources.inc', d)}

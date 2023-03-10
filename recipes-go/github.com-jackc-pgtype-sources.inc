@@ -1,5 +1,5 @@
-SRC_URI += "https://proxy.golang.org/github.com/jackc/pgtype/@v/v1.12.0.zip;srcoutput=github.com/jackc/pgtype;srcinput=github.com/jackc/pgtype@v1.12.0;downloadfilename=github-com-jackc-pgtype-1.12.0.zip;name=github-com-jackc-pgtype"
-SRC_URI[github-com-jackc-pgtype.sha256sum] = "d16cd712cd96b66ae71756150d7ce153af7df9a4321af797e967e4384b2a3959"
+SRC_URI += "https://proxy.golang.org/github.com/jackc/pgtype/@v/v1.14.0.zip;srcoutput=github.com/jackc/pgtype;srcinput=github.com/jackc/pgtype@v1.14.0;downloadfilename=github-com-jackc-pgtype-1.14.0.zip;name=github-com-jackc-pgtype"
+SRC_URI[github-com-jackc-pgtype.sha256sum] = "7e67f5b944cbd401025c6473e624ef61ed196e3ed0f77ed437b0621cf820c0c9"
 
 GOSRC_LICENSE += "\
     MIT \
