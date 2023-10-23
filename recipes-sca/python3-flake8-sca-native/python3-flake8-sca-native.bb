@@ -12,7 +12,9 @@ inherit native
 
 PACKAGECONFIG ??= "\
                    2020 \
+                   async \
                    comprehensions \
+                   datetimez \
                    dlint \
                    eradicate \
                    executable \
@@ -23,14 +25,18 @@ PACKAGECONFIG ??= "\
                    mutable \
                    quotes \
                    requirements \
+                   return \
                    secure-coding-standard \
                    strict \
                    string-format \
+                   use-fstring \
                    variables-names \
                    wemake-python \
                   "
 PACKAGECONFIG[2020] = ",,python3-flake8-2020-native"
+PACKAGECONFIG[async] = ",,python3-flake8-async-native"
 PACKAGECONFIG[comprehensions] = ",,python3-flake8-comprehensions-native"
+PACKAGECONFIG[datetimez] = ",,python3-flake8-datetimez-native"
 PACKAGECONFIG[dlint] = ",,python3-flake8-dlint-native"
 PACKAGECONFIG[eradicate] = ",,python3-flake8-eradicate-native"
 PACKAGECONFIG[executable] = ",,python3-flake8-executable-native"
@@ -40,10 +46,12 @@ PACKAGECONFIG[functions] = ",,python3-flake8-functions-native"
 PACKAGECONFIG[import-order] = ",,python3-flake8-import-order-native"
 PACKAGECONFIG[mutable] = ",,python3-flake8-mutable-native"
 PACKAGECONFIG[quotes] = ",,python3-flake8-quotes-native"
+PACKAGECONFIG[return] = ",,python3-flake8-return-native"
 PACKAGECONFIG[requirements] = ",,python3-flake8-requirements-native"
 PACKAGECONFIG[secure-coding-standard] = ",,python3-flake8-secure-coding-standard-native"
 PACKAGECONFIG[strict] = ",,python3-flake8-strict-native"
 PACKAGECONFIG[string-format] = ",,python3-flake8-string-format-native"
+PACKAGECONFIG[use-fstring] = ",,python3-flake8-use-fstring-native"
 PACKAGECONFIG[variables-names] = ",,python3-flake8-variables-names-native"
 PACKAGECONFIG[wemake-python] = ",,python3-wemake-python-styleguide-native"
 
