@@ -7,18 +7,18 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS += "\
-    nativesdk-python3-flake8 \
-    nativesdk-python3-isort \
-    nativesdk-python3-testfixtures \
-"
+            python3-flake8-native \
+            python3-isort-native \
+            python3-testfixtures-native \
+            "
 
-SRC_URI[sha256sum] = "d4639343bac540194c59fb1618ac2c285b3e27609f353bef6f50904d40c1643e"
+SRC_URI[sha256sum] = "c1f82f3cf06a80c13e1d09bfae460e9666255d5c780b859f19f8318d420370b3"
 
-PYPI_PACKAGE = "flake8-isort"
+PYPI_PACKAGE = "flake8_isort"
 
 inherit pypi
-inherit setuptools3
-inherit nativesdk
+inherit python_hatchling
+inherit native
 
 RDEPENDS:${PN}:class-nativesdk += "\
     nativesdk-python3-core \
