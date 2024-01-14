@@ -78,11 +78,12 @@ def _sca_flake8_get_python3_stdlib_files(d):
     res = set()
     for pkg in clean_split(d, "_SCA_FLAKE_PYTHON_STDLIB_PKGS"):
         pkgdata = oe.packagedata.read_subpkgdata_dict(pkg, d)
-        file_list = pkgdata["FILES_INFO"]
+        file_list = pkgdata.get("FILES_INFO", {})
         if isinstance(file_list, str):
             import ast
             file_list = ast.literal_eval(file_list)
         res.update(file_list.keys())
+    return " ".join(res)
 
 SCA_FILE_FILTER_EXTRA:append = " ${@_sca_flake8_get_python3_stdlib_files(d)}"
 do_sca_flake8_core[doc] = "Lint python code with flake8 in image"
