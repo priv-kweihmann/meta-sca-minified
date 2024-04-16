@@ -18,10 +18,10 @@
     },
     "test": {
         "integration": [
-            {"cmd": ["kconfig-hardened-check", "--help"], "returncode": 0}
+            {"cmd": ["kernel-hardening-checker", "--help"], "returncode": 0}
         ],
         "findings": [
-            "linux-yocto"
+            "linux-yocto-tiny"
         ],
         "no-findings": [
             "busybox"
