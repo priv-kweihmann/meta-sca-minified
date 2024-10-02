@@ -9,11 +9,12 @@ DEPENDS += "python3-native"
 
 SRC_URI += "git://github.com/david-a-wheeler/flawfinder.git;nobranch=1;protocol=https"
 SRCREV = "c57197cd6061453f10a496f30a732bc1905918d1"
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 inherit sca-description
 inherit setuptools3
-inherit native
+inherit_defer native
 
 SCA_TOOL_DESCRIPTION = "flawfinder"
 PIP_INSTALL_PACKAGE = "flawfinder"

@@ -12,11 +12,12 @@ SRC_URI = "\
 SRCREV = "86b9395715c774d7454a0d663dcc59a1dff2f757"
 UPSTREAM_CHECK_COMMITS = "1"
 
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 inherit sca-description
 inherit setuptools3
-inherit native
+inherit_defer native
 
 SCA_TOOL_DESCRIPTION = "looong"
 PIP_INSTALL_PACKAGE = "looong"

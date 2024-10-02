@@ -13,15 +13,13 @@ LIC_FILES_CHKSUM = "\
     file://picobuild/vendored/tomli/LICENSE;md5=aaaaf0879d17df0110d1aa8c8c9f46f5 \
 "
 
-# nooelint: oelint.vars.dependsclass
-DEPENDS:remove = "python3"
-
 PV .= "+git${SRCPV}"
 
 SRC_URI = "git://gitlab.com/rossburton/picobuild.git;protocol=https;branch=main"
 SRCREV = "ed3b16ce48d91df181e5f5d77b9bbc2577b3fd9d"
 
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 inherit python_flit_core
-inherit native
+inherit_defer native

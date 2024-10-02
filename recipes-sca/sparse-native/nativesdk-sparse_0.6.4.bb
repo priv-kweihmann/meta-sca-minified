@@ -7,12 +7,13 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=69a9605316748b9e191e454efc2235b1"
 
 SRC_URI = "git://git.kernel.org/pub/scm/devel/sparse/sparse.git;branch=master;protocol=https"
 SRCREV = "c4706aa764f3ae68258ba60be6325a5662900362"
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 inherit pkgconfig
 
 inherit sca-description
-inherit nativesdk
+inherit_defer nativesdk
 SCA_TOOL_DESCRIPTION = "sparse"
 
 DEBUG_PREFIX_MAP:remove = "-fcanon-prefix-map"

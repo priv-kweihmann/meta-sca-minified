@@ -11,7 +11,6 @@ DEPENDS += "\
             python3-click-native \
             python3-packaging-native \
             python3-setuptools-scm-native \
-            python3-toml-native \
             python3-typed-ast-native \
             "
 
@@ -23,8 +22,8 @@ SRC_URI[sha256sum] = "a9952229092e325fe5f3dae56d81f639b23f7131eb840781947e4b2886
 UPSTREAM_CHECK_REGEX ?= "/${PYPI_PACKAGE}/(?P<pver>(\d+[a-z0-9\.\-_]*)+)"
 
 inherit pypi
-inherit setuptools3
-inherit native
+inherit python_setuptools_build_meta
+inherit_defer native
 
 RDEPENDS:${PN}:class-nativesdk += "\
     nativesdk-python3-appdirs \

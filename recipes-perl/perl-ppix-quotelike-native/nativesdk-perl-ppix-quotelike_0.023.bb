@@ -12,10 +12,11 @@ SRC_URI = "https://cpan.metacpan.org/authors/id/W/WY/WYANT/PPIx-QuoteLike-${PV}.
 SRC_URI[md5sum] = "551890e6c65a3eb0f4b753ad4288acb2"
 SRC_URI[sha256sum] = "3576a3149d2c53e07e9737b7892be5cfb84a499a6ef1df090b713b0544234d21"
 
-S = "${WORKDIR}/PPIx-QuoteLike-${PV}"
+UNPACKDIR ??= "${WORKDIR}/sources"
+S = "${UNPACKDIR}/PPIx-QuoteLike-${PV}"
 
 inherit cpan_build
-inherit nativesdk
+inherit_defer nativesdk
 
 do_install:append() {
     # Remove .packlist file, as it contains host specific paths

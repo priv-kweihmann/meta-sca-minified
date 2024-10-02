@@ -1,11 +1,11 @@
-SRC_URI += "https://proxy.golang.org/golang.org/x/telemetry/@v/v0.0.0-20240405141642-5e7a33625e65.zip;srcoutput=golang.org/x/telemetry;srcinput=golang.org/x/telemetry@v0.0.0-20240405141642-5e7a33625e65;downloadfilename=golang-org-x-telemetry-0.0.0-20240405141642-5e7a33625e65.zip;name=golang-org-x-telemetry"
-SRC_URI[golang-org-x-telemetry.sha256sum] = "b1704554fbe49bb89e870e117eda82206032575fa47700062a58f99bdbe70daa"
+SRC_URI += "https://proxy.golang.org/golang.org/x/telemetry/@v/v0.0.0-20240927214544-e9e6960092dd.zip;srcoutput=golang.org/x/telemetry;srcinput=golang.org/x/telemetry@v0.0.0-20240927214544-e9e6960092dd;downloadfilename=golang-org-x-telemetry-0.0.0-20240927214544-e9e6960092dd.zip;name=golang-org-x-telemetry"
+SRC_URI[golang-org-x-telemetry.sha256sum] = "edacdaf9b25fa0d25aeb92d0ab323532c4690e7269d399cc05447623b75f360a"
 
 GOSRC_LICENSE += "\
     BSD-3-Clause \
 "
 LIC_FILES_CHKSUM += "\
-    file://src/golang.org/x/telemetry/LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707 \
+    file://golang.org/x/telemetry/LICENSE;md5=7998cb338f82d15c0eff93b7004d272a \
 "
 
 GOSRC_INCLUDEGUARD += "golang.org-x-telemetry-sources.inc"

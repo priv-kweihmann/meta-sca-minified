@@ -18,18 +18,19 @@ SRC_URI = "git://github.com/cpplint/cpplint.git;protocol=https;branch=master \
            file://cpplint-multi"
 SRCREV = "adfa11cf7584ae3c57cb77489b5af1681002f47d"
 
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 inherit sca-description
 inherit setuptools3
-inherit nativesdk
+inherit_defer nativesdk
 SCA_TOOL_DESCRIPTION = "cpplint"
 do_configure:prepend() {
     sed -i "s#pytest-runner==5.2#pytest-runner>=5.2#g" ${S}/setup.py
 }
 do_install:append() {
     if [ ! -e ${D}${bindir}/cpplint-multi ]; then
-        install -m 0755 ${WORKDIR}/cpplint-multi ${D}${bindir}/cpplint-multi
+        install -m 0755 ${UNPACKDIR}/cpplint-multi ${D}${bindir}/cpplint-multi
     fi
 }
 RDEPENDS:${PN}:class-nativesdk += "\

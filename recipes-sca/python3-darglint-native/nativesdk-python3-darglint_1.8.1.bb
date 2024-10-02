@@ -8,11 +8,18 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=909f5d1d9b02b61f9a881c944b0ec36a"
 
 SRC_URI += "git://github.com/terrencepreilly/darglint.git;branch=master;protocol=https"
 SRCREV = "abc26b768cd7135d848223ba53f68323593c33d5"
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 inherit sca-description
-inherit setuptools3
-inherit nativesdk
+inherit python_poetry_core
+inherit_defer nativesdk
+
+do_configure:prepend() {
+    sed -i 's#poetry.masonry.api#poetry.core.masonry.api#g' ${S}/pyproject.toml
+    sed -i 's#poetry>=#poetry_core>=#g' ${S}/pyproject.toml
+}
+
 SCA_TOOL_DESCRIPTION = "darglint"
 PIP_INSTALL_PACKAGE = "darglint"
 RDEPENDS:${PN}:class-nativesdk += "\

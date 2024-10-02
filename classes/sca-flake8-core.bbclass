@@ -27,9 +27,11 @@ def do_sca_conv_flake8(d):
         "DAR": "warning",
         "DUO": "warning",
         "ECE": "warning",
+        "ENC": "warning",
         "EXE": "error",
         "RST": "warning",
         "TAE": "warning",
+        "SFT": "warning",
         "WPS": "warning",
         "VNE": "info",
         "YTT": "warning",
@@ -64,7 +66,7 @@ def do_sca_conv_flake8(d):
         with open(sca_raw_result_file(d, "flake8"), "r") as f:
             for m in re.finditer(pattern, f.read(), re.MULTILINE):
                 try:
-                    if severity_map[m.group("severity")] not in sca_allowed_warning_level(d):
+                    if severity_map.get(m.group("severity"), "warning") not in sca_allowed_warning_level(d):
                         continue
                     g = sca_get_model_class(d,
                                             PackageName=package_name,
@@ -75,7 +77,7 @@ def do_sca_conv_flake8(d):
                                             Column=m.group("col"),
                                             Message=m.group("message"),
                                             ID="{}{}".format(m.group("severity"), m.group("id")),
-                                            Severity=severity_map[m.group("severity")])
+                                            Severity=severity_map.get(m.group("severity"), "warning"))
                     if _suppress.Suppressed(g):
                         continue
                     if g.Scope not in clean_split(d, "SCA_SCOPE_FILTER"):

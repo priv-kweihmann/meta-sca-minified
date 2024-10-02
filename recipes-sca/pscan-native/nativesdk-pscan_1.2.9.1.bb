@@ -10,10 +10,11 @@ DEPENDS += "nativesdk-flex"
 SRC_URI = "git://github.com/priv-kweihmann/pscan.git;branch=master;protocol=https"
 SRCREV = "ce7f87da3d2ea265ad27bbdf10828532c8e3a028"
 
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 inherit sca-description
-inherit nativesdk
+inherit_defer nativesdk
 SCA_TOOL_DESCRIPTION = "pscan"
 do_configure[noexec] = "1"
 do_compile() {

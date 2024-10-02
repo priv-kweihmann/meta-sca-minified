@@ -10,11 +10,12 @@ SRC_URI = "git://github.com/JossWhittle/FlintPlusPlus.git;protocol=https;branch=
 SRCREV = "e209329bdf0d1c53c43474519bd875b692f9d61e"
 UPSTREAM_CHECK_COMMITS = "1"
 
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 inherit pkgconfig
 inherit sca-description
-inherit native
+inherit_defer native
 
 SCA_TOOL_DESCRIPTION = "flint"
 

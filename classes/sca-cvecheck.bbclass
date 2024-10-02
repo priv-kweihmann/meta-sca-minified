@@ -24,26 +24,20 @@ python sca_cvecheck_init() {
     d.appendVarFlag("do_package_qa", "depends", " {}:{}".format(d.getVar("PN"), "do_cve_check"))
 }
 
-def sca_create_data_file(d, patched, unpatched, cve_data):
+def sca_create_data_file(d, cve_data):
     import os
     """
     Write CVE information in WORKDIR; and to CVE_CHECK_DIR, and
     CVE manifest if enabled.
     """
-
-    cve_file = d.getVar("CVE_CHECK_LOG")
     nvd_link = "https://web.nvd.nist.gov/view/vuln/detail?vulnId="
-    write_string = ""
-    unpatched_cves = []
-    bb.utils.mkdirhier(os.path.dirname(cve_file))
 
     package_name = d.getVar("PN")
     _suppress = sca_suppress_init(d, clean_split(d, ""), None, file_trace=False)
-    items = []
     _findings = []
 
     for cve in sorted(cve_data):
-        if cve in patched:
+        if cve_is_patched(d, cve_data, cve):
             continue
         g = sca_get_model_class(d,
                                 PackageName=package_name,
@@ -77,19 +71,15 @@ python do_cve_check() {
 
     if os.path.exists(d.getVar("CVE_CHECK_DB_FILE")):
         patched_cves = get_patched_cves(d)
-        _ret_cve_check = check_cves(d, patched_cves)
-        if len(_ret_cve_check) == 3:
-            _, patched, unpatched = check_cves(d, patched_cves)
-        else:
-            _, patched, unpatched, _ = check_cves(d, patched_cves)
-        if patched or unpatched:
-            cve_data = get_cve_info(d, patched + unpatched)
+        _data, _ = check_cves(d, patched_cves)
+        if _data:
+            get_cve_info(d, _data)
 
-            output = sca_create_data_file(d, patched, unpatched, cve_data)
+            output = sca_create_data_file(d, _data)
         else:
-            output = sca_create_data_file(d, [], [], [])
+            output = sca_create_data_file(d, [])
     else:
-        output = sca_create_data_file(d, [], [], [])
+        output = sca_create_data_file(d, [])
         bb.note("Failed to update CVE database, skipping CVE check")
 
     with open(sca_raw_result_file(d, "cvecheck"), "w") as o:

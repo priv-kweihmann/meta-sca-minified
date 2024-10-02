@@ -37,14 +37,15 @@ DEPENDS += "\
 
 SRC_URI = "git://github.com/Perl-Critic/Perl-Critic.git;branch=master;protocol=https"
 SRCREV = "47c8115b82f47bd27cba1af2f200694e69a1ef14"
-S = "${WORKDIR}/git"
+UNPACKDIR ??= "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>1\.\d{3})"
 
 inherit cpan_build
 
 inherit sca-description
-inherit nativesdk
+inherit_defer nativesdk
 SCA_TOOL_DESCRIPTION = "perlcritic"
 do_compile () {
     perl Build verbose=1
