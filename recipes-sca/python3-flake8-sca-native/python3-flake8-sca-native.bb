@@ -22,14 +22,12 @@ PACKAGECONFIG ??= "\
                    expression-complexity \
                    fixme \
                    functions \
-                   import-order \
                    mutable \
                    quotes \
                    requirements \
                    return \
                    secure-coding-standard \
                    strftime \
-                   strict \
                    string-format \
                    use-fstring \
                    variables-names \
@@ -46,14 +44,12 @@ PACKAGECONFIG[executable] = ",,python3-flake8-executable-native"
 PACKAGECONFIG[expression-complexity] = ",,python3-flake8-expression-complexity-native"
 PACKAGECONFIG[fixme] = ",,python3-flake8-fixme-native"
 PACKAGECONFIG[functions] = ",,python3-flake8-functions-native"
-PACKAGECONFIG[import-order] = ",,python3-flake8-import-order-native"
 PACKAGECONFIG[mutable] = ",,python3-flake8-mutable-native"
 PACKAGECONFIG[quotes] = ",,python3-flake8-quotes-native"
 PACKAGECONFIG[return] = ",,python3-flake8-return-native"
 PACKAGECONFIG[requirements] = ",,python3-flake8-requirements-native"
 PACKAGECONFIG[secure-coding-standard] = ",,python3-flake8-secure-coding-standard-native"
 PACKAGECONFIG[strftime] = ",,python3-flake8-strftime-native"
-PACKAGECONFIG[strict] = ",,python3-flake8-strict-native"
 PACKAGECONFIG[string-format] = ",,python3-flake8-string-format-native"
 PACKAGECONFIG[use-fstring] = ",,python3-flake8-use-fstring-native"
 PACKAGECONFIG[variables-names] = ",,python3-flake8-variables-names-native"
