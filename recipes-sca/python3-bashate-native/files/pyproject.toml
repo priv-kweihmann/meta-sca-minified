@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools", "pbr>=1.8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bashate"
+version = "2.1.1"
+description = "A pep8 equivalent for bash scripts"
+authors = [
+    {name = "OpenStack", email = "openstack-discuss@lists.openstack.org" }
+]
+readme = "README.rst"
+requires-python = ">=3.5"
+classifiers = [
+    "Environment :: OpenStack",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+[project.urls]
+homepage = "https://docs.openstack.org/bashate/latest/"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[project.scripts]
+bashate = "bashate.bashate:main"

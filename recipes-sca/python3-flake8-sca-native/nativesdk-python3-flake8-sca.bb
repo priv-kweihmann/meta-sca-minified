@@ -6,6 +6,8 @@ LIC_FILES_CHKSUM = "file://${SCA_LAYERDIR}/LICENSE;md5=a4a2bbea1db029f21b3a328c7
 
 DEPENDS += "nativesdk-python3-flake8"
 
+S = "${UNPACKDIR}"
+
 inherit sca-description
 inherit python3-dir
 inherit_defer nativesdk
@@ -18,16 +20,12 @@ PACKAGECONFIG ??= "\
                    encodings \
                    eradicate \
                    executable \
-                   expression-complexity \
                    fixme \
-                   functions \
                    mutable \
                    quotes \
                    requirements \
                    return \
-                   secure-coding-standard \
                    strftime \
-                   string-format \
                    use-fstring \
                    variables-names \
                    wemake-python \
@@ -41,16 +39,12 @@ PACKAGECONFIG[dlint] = ",,nativesdk-python3-flake8-dlint"
 PACKAGECONFIG[encodings] = ",,nativesdk-python3-flake8-encodings"
 PACKAGECONFIG[eradicate] = ",,nativesdk-python3-flake8-eradicate"
 PACKAGECONFIG[executable] = ",,nativesdk-python3-flake8-executable"
-PACKAGECONFIG[expression-complexity] = ",,nativesdk-python3-flake8-expression-complexity"
 PACKAGECONFIG[fixme] = ",,nativesdk-python3-flake8-fixme"
-PACKAGECONFIG[functions] = ",,nativesdk-python3-flake8-functions"
 PACKAGECONFIG[mutable] = ",,nativesdk-python3-flake8-mutable"
 PACKAGECONFIG[quotes] = ",,nativesdk-python3-flake8-quotes"
 PACKAGECONFIG[return] = ",,nativesdk-python3-flake8-return"
 PACKAGECONFIG[requirements] = ",,nativesdk-python3-flake8-requirements"
-PACKAGECONFIG[secure-coding-standard] = ",,nativesdk-python3-flake8-secure-coding-standard"
 PACKAGECONFIG[strftime] = ",,nativesdk-python3-flake8-strftime"
-PACKAGECONFIG[string-format] = ",,nativesdk-python3-flake8-string-format"
 PACKAGECONFIG[use-fstring] = ",,nativesdk-python3-flake8-use-fstring"
 PACKAGECONFIG[variables-names] = ",,nativesdk-python3-flake8-variables-names"
 PACKAGECONFIG[wemake-python] = ",,nativesdk-python3-wemake-python-styleguide"
