@@ -8,7 +8,9 @@ PACKAGEGROUP_DISABLE_COMPLEMENTARY = "1"
 RDEPENDS:${PN} += "\
     ${@oe.utils.ifelse('bandit' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-python3-bandit nativesdk-sca-recipe-bandit-rules', '')} \
     ${@oe.utils.ifelse('bashate' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-python3-bashate nativesdk-sca-recipe-bashate-rules', '')} \
+    ${@oe.utils.ifelse('cargodeny' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-rust-cargo-deny nativesdk-advisory-db nativesdk-sca-recipe-cargodeny-rules', '')} \
     ${@oe.utils.ifelse('checkbashism' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-checkbashism nativesdk-sca-recipe-checkbashism-rules', '')} \
+    ${@oe.utils.ifelse('clippy' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-clippy-sca nativesdk-sca-recipe-clippy-rules', '')} \
     ${@oe.utils.ifelse('cppcheck' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-cppcheck nativesdk-sca-recipe-cppcheck-rules', '')} \
     ${@oe.utils.ifelse('cpplint' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-cpplint nativesdk-sca-recipe-cpplint-rules', '')} \
     ${@oe.utils.ifelse('darglint' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-python3-darglint nativesdk-sca-recipe-darglint-rules', '')} \
@@ -18,7 +20,6 @@ RDEPENDS:${PN} += "\
     ${@oe.utils.ifelse('flawfinder' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-python3-flawfinder nativesdk-sca-recipe-flawfinder-rules', '')} \
     ${@oe.utils.ifelse('flint' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-flint++ nativesdk-sca-recipe-flint-rules', '')} \
     ${@oe.utils.ifelse('golint' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-golint-sca nativesdk-sca-recipe-golint-rules', '')} \
-    ${@oe.utils.ifelse('it' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-python3-it nativesdk-sca-recipe-it-rules', '')} \
     ${@oe.utils.ifelse('jsonlint' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-jsonlint-sca nativesdk-sca-recipe-jsonlint-rules', '')} \
     ${@oe.utils.ifelse('kconfighard' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-kconfig-hardened-check nativesdk-sca-recipe-kconfighard-rules', '')} \
     ${@oe.utils.ifelse('looong' in (d.getVar('SCA_AVAILABLE_MODULES') or '').split(' '), 'nativesdk-python3-looong nativesdk-sca-recipe-looong-rules', '')} \

@@ -13,12 +13,13 @@ SCA_ENABLED_MODULES_RECIPE ?= "\
                             bandit \
                             bashate \
                             bitbake \
+                            cargodeny \
                             cbmc \
                             checkbashism \
+                            clippy \
                             cmake \
                             cppcheck \
                             cpplint \
-                            cvecheck \
                             darglint \
                             dennis \
                             detectsecrets \
@@ -27,7 +28,6 @@ SCA_ENABLED_MODULES_RECIPE ?= "\
                             flint \
                             gcc \
                             golint \
-                            it \
                             jsonlint \
                             kconfighard \
                             licensecheck \
